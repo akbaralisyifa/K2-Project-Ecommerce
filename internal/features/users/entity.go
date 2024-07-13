@@ -1,6 +1,6 @@
 package users
 
-type Users struct {
+type User struct {
 	ID       uint
 	Username string
 	Email    string
@@ -11,6 +11,8 @@ type Handler interface {
 }
 
 type Query interface {
+	Register(newUsers User) error
+	Login(email string) (User, error)
 }
 
 type Service interface {
