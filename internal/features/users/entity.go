@@ -1,5 +1,7 @@
 package users
 
+import "github.com/labstack/echo/v4"
+
 type User struct {
 	ID       uint
 	Username string
@@ -8,6 +10,8 @@ type User struct {
 }
 
 type Handler interface {
+	Register() echo.HandlerFunc
+	Login() echo.HandlerFunc
 }
 
 type Query interface {
@@ -16,6 +20,8 @@ type Query interface {
 }
 
 type Service interface {
+	Register(newUser User) error
+	Login(email string, password string) (User,string, error)
 }
 
 type RegisterValidation struct {
