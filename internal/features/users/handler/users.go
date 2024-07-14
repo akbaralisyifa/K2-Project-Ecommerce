@@ -55,7 +55,7 @@ func (uc *UserContorler) Login() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", nil))
 		}
 
-		return c.JSON(http.StatusOK, map[string]any{"code": http.StatusOK, "message": "success", "token": token})
+		return c.JSON(http.StatusOK, map[string]any{"code": http.StatusOK, "message": "success", "data": ToLoginResponse(token)})
 	}
 }
 
