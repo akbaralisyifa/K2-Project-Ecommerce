@@ -23,8 +23,8 @@ func NewValidatorUtility(v validator.Validate) ValidatorUtilityInterface {
 	}
 }
 
-func (vu *ValidateUtility) RegisterValidator(username string, email string, password string) error {
-		err := vu.vldt.Struct(users.RegisterValidation{Username: username, Email: email, Password: password});
+func (vu *ValidateUtility) RegisterValidator(fullname string, email string, password string) error {
+		err := vu.vldt.Struct(users.RegisterValidation{Fullname: fullname, Email: email, Password: password});
 
 		if err != nil {
 			log.Println("register validator error", err.Error());

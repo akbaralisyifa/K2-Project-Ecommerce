@@ -3,7 +3,7 @@ package handler
 import "ecommerce/internal/features/users"
 
 type UserRequest struct {
-	Username string `json:"username"`
+	Fullname string `json:"fullname"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
@@ -15,7 +15,7 @@ type LoginRequest struct {
 
 func ToModelUser(ur UserRequest) users.User{
 	return users.User{
-		Username: ur.Username,
+		Fullname: ur.Fullname,
 		Email: ur.Email,
 		Password: ur.Password,
 	}

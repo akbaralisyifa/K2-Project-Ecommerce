@@ -25,7 +25,7 @@ func (ju *JwtUtility) GenereteJwt(id uint) (string, error) {
 	data := jwt.MapClaims{};
 
 	data["id"] = id;
-	data["iat"] = time.Now().Add(time.Hour * 5).Unix();
+	data["iat"] = time.Now().Unix();
 	// data["exp"] = time.Now().Add(time.Hour * 5).Unix();
 
 	processToken := jwt.NewWithClaims(jwt.SigningMethodHS256, data);
