@@ -8,16 +8,18 @@ import (
 
 type Users struct {
 	gorm.Model
-	Username 	string
+	Fullname 	string
 	Email 		string
 	Password 	string
+	Phone		string
+	Address		string
 };
 
 // dari database di pindah ke entity
 func (u *Users) ToUsersEntity() users.User{
 	return users.User{
 		ID: 	  u.ID,
-		Username: u.Username,
+		Fullname: u.Fullname,
 		Email:    u.Email,
 		Password: u.Password,
 	}
@@ -26,7 +28,7 @@ func (u *Users) ToUsersEntity() users.User{
 // dari entity pindah ke database
 func ToUsersQuery(input users.User) Users {
 	return Users{
-		Username: input.Username,
+		Fullname: input.Fullname,
 		Email: 	  input.Email,
 		Password: input.Password,
 	}

@@ -38,4 +38,4 @@ func (um *UserModels) Login(email string) (users.User, error) {
 	}
 
 	return result.ToUsersEntity(), nil;
-}
+};

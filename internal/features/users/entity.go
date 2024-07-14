@@ -4,9 +4,11 @@ import "github.com/labstack/echo/v4"
 
 type User struct {
 	ID       uint
-	Username string
+	Fullname string
 	Email    string
 	Password string
+	Phone	 string
+	Address	 string
 }
 
 type Handler interface {
@@ -25,7 +27,7 @@ type Service interface {
 }
 
 type RegisterValidation struct {
-	Username string `validate:"required"`
+	Fullname string `validate:"required"`
 	Email    string `validate:"required,email"`
 	Password string `validate:"required"`
 }

@@ -29,7 +29,7 @@ func NewUserService(q users.Query, p utils.HashingPwInterface, v utils.Validator
 func (us *UserServices) Register(newUser users.User) error {
 	
 	// validasi data
-	err := us.vld.RegisterValidator(newUser.Username, newUser.Email, newUser.Password);
+	err := us.vld.RegisterValidator(newUser.Fullname, newUser.Email, newUser.Password);
 	if err != nil {
 		log.Println("validator register error", err.Error());
 		return err
