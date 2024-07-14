@@ -49,13 +49,13 @@ func (uc *UserContorler) Login() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "bad request", nil))
 		}
 
-		result, token, err := uc.srv.Login(input.Email, input.Password)
+		_, token, err := uc.srv.Login(input.Email, input.Password)
 		if err != nil {
 			log.Println("Error", err.Error())
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", nil))
 		}
-		
-		return c.JSON(http.StatusOK, map[string]any{"code": http.StatusOK, "message": "success", "data": ToLoginResponse(result), "token": token})
+
+		return c.JSON(http.StatusOK, map[string]any{"code": http.StatusOK, "message": "success", "token": token})
 	}
 }
 
