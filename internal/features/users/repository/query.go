@@ -19,7 +19,7 @@ func NewUserModels(connect *gorm.DB) users.Query {
 // Register
 func (um *UserModels) Register(newUsers users.User)(error) {
 	cnvData := ToUsersQuery(newUsers);
-	err := um.db.Create(cnvData).Error
+	err := um.db.Create(&cnvData).Error
 
 	if err != nil {
 		return err

@@ -25,9 +25,9 @@ type Service interface {
 }
 
 type RegisterValidation struct {
-	Username string `validate:"required,alpanum"`
+	Username string `validate:"required"`
 	Email    string `validate:"required,email"`
-	Password string `validate:"required,min=7,alphanum"`
+	Password string `validate:"required"`
 }
 
 type LoginValidation struct {
