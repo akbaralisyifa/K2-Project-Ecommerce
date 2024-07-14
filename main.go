@@ -29,7 +29,7 @@ func InitUserRouter(db *gorm.DB) users.Handler{
 
 func main() {
 	e := echo.New();
-	setup := config.InportSetting();
+	setup := config.ImportSetting();
 	connect, _ := config.ConnectDB(&setup);
 
 
@@ -43,5 +43,5 @@ func main() {
 
 	routes.InitRoute(e, ur)
 
-	e.Logger.Fatal(e.Start("5000"))
+	e.Logger.Fatal(e.Start(":6000"))
 }

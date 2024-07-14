@@ -8,7 +8,6 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/schema"
 )
 
 type setting struct {
@@ -20,7 +19,7 @@ type setting struct {
 	JWTSecrat	string
 }
 
-	func InportSetting() setting {
+	func ImportSetting() setting {
 		var result setting
 
 		err := godotenv.Load(".env");
@@ -40,11 +39,7 @@ type setting struct {
 
 	func ConnectDB(s *setting)(*gorm.DB, error){
 		var connStr = fmt.Sprintf("host=%s user=%s password=%s port=%s dbname=%s", s.Host, s.User, s.Password, s.Port, s.DBName)
-		db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{
-		NamingStrategy: schema.NamingStrategy{
-				TablePrefix: "public.",
-			},
-		})
+		db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 
 		if err != nil {
 			log.Fatal("Error config database ", err.Error())
