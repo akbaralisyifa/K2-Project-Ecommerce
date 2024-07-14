@@ -21,7 +21,7 @@ func NewJwtUtility() JwtUtilityInterface {
 
 func (ju *JwtUtility) GenereteJwt(id uint) (string, error) {
 
-	jwtKey := config.InportSetting().JWTSecrat;
+	jwtKey := config.ImportSetting().JWTSecrat;
 	data := jwt.MapClaims{};
 
 	data["id"] = id;
