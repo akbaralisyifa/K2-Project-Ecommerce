@@ -32,7 +32,8 @@ type setting struct {
 		result.Host		= os.Getenv("DB_HOST");
 		result.Port		= os.Getenv("DB_PORT");
 		result.DBName 	= os.Getenv("DB_NAME");
-		result.Password = os.Getenv("DB_PASSWORD")
+		result.Password = os.Getenv("DB_PASSWORD");
+		result.JWTSecrat= os.Getenv("JWT_SECRATE");
 
 		return result;
 	}
