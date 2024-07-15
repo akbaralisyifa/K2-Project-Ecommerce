@@ -13,10 +13,28 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+type GetUpdateRequest struct {
+	Fullname string `json:"fullname"`
+	Email    string `json:"email"`
+	Password string `json:"password"`	
+	Phone 	 string `json:"phone"`	
+	Address  string `json:"address"`	
+}
+
 func ToModelUser(ur UserRequest) users.User{
 	return users.User{
 		Fullname: ur.Fullname,
-		Email: ur.Email,
+		Email: 	  ur.Email,
 		Password: ur.Password,
+	}
+};
+
+func ToRequertUser(ur GetUpdateRequest) users.User {
+	return users.User{
+		Fullname: ur.Fullname,
+		Email:    ur.Email,
+		Password: ur.Password,
+		Phone:    ur.Phone,
+		Address:  ur.Address,
 	}
 }

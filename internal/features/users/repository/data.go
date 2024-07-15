@@ -22,6 +22,8 @@ func (u *Users) ToUsersEntity() users.User{
 		Fullname: u.Fullname,
 		Email:    u.Email,
 		Password: u.Password,
+		Phone: 	  u.Phone,
+		Address:  u.Address,
 	}
 }
 
@@ -31,5 +33,7 @@ func ToUsersQuery(input users.User) Users {
 		Fullname: input.Fullname,
 		Email: 	  input.Email,
 		Password: input.Password,
+		Phone:	  input.Phone,
+		Address:  input.Address,
 	}
 }
