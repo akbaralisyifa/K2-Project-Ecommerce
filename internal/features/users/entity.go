@@ -3,12 +3,13 @@ package users
 import "github.com/labstack/echo/v4"
 
 type User struct {
-	ID       uint
-	Fullname string
-	Email    string
-	Password string
-	Phone	 string
-	Address	 string
+	ID         uint
+	Fullname   string
+	Email      string
+	Password   string
+	Phone	   string
+	Address	   string
+	ImgProfile string
 }
 
 type Handler interface {
