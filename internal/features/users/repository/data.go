@@ -1,6 +1,7 @@
 package repository
 
 import (
+	prep "ecommerce/internal/features/products/repository"
 	"ecommerce/internal/features/users"
 
 	"gorm.io/gorm"
@@ -8,23 +9,24 @@ import (
 
 type Users struct {
 	gorm.Model
-	Fullname 	string
-	Email 		string
-	Password 	string
-	Phone		string
-	Address		string
-	ImgProfile	string
-};
+	Fullname   string
+	Email      string
+	Password   string
+	Phone      string
+	Address    string
+	ImgProfile string
+	Products   []prep.Products `gorm:"foreignKey:UserID"`
+}
 
 // dari database di pindah ke entity
-func (u *Users) ToUsersEntity() users.User{
+func (u *Users) ToUsersEntity() users.User {
 	return users.User{
-		ID: 	  u.ID,
-		Fullname: u.Fullname,
-		Email:    u.Email,
-		Password: u.Password,
-		Phone: 	  u.Phone,
-		Address:  u.Address,
+		ID:         u.ID,
+		Fullname:   u.Fullname,
+		Email:      u.Email,
+		Password:   u.Password,
+		Phone:      u.Phone,
+		Address:    u.Address,
 		ImgProfile: u.ImgProfile,
 	}
 }
@@ -32,11 +34,11 @@ func (u *Users) ToUsersEntity() users.User{
 // dari entity pindah ke database
 func ToUsersQuery(input users.User) Users {
 	return Users{
-		Fullname: input.Fullname,
-		Email: 	  input.Email,
-		Password: input.Password,
-		Phone:	  input.Phone,
-		Address:  input.Address,
+		Fullname:   input.Fullname,
+		Email:      input.Email,
+		Password:   input.Password,
+		Phone:      input.Phone,
+		Address:    input.Address,
 		ImgProfile: input.ImgProfile,
 	}
 }

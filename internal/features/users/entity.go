@@ -7,8 +7,8 @@ type User struct {
 	Fullname   string
 	Email      string
 	Password   string
-	Phone	   string
-	Address	   string
+	Phone      string
+	Address    string
 	ImgProfile string
 }
 
@@ -23,14 +23,14 @@ type Handler interface {
 type Query interface {
 	Register(newUsers User) error
 	Login(email string) (User, error)
-	GetUser(ID uint)(User, error)
+	GetUser(ID uint) (User, error)
 	UpdateUser(ID uint, updateUser User) error
 	DeleteUser(ID uint) error
 }
 
 type Service interface {
 	Register(newUser User) error
-	Login(email string, password string) (User,string, error)
+	Login(email string, password string) (User, string, error)
 	GetUser(ID uint) (User, error)
 	UpdateUser(ID uint, updateUser User) error
 	DeleteUser(ID uint) error
