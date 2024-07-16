@@ -81,16 +81,30 @@ func (uc *UserController) UpdateUser() echo.HandlerFunc {
 
 		ID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token));
 
-		var input GetUpdateRequest;
-		err := c.Bind(&input);
-
+		var updateUser GetUpdateRequest;
+		err := c.Bind(&updateUser);
 		if err != nil {
 			log.Println("Error", err.Error());
 			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "Invalid request parameters", nil))
 		}
 
-		err = uc.srv.UpdateUser(uint(ID), ToRequertUser(input));
+		// Bagian updaload Image
+		file, err := c.FormFile("image_profile");
+		if err == nil {
+			// open file
+			src, err := file.Open(); if err != nil {
+				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "profile image error", nil))
+			}
+			defer src.Close()
+			
+			urlImage, err := utils.UploadToCloudinary(src, file.Filename);
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "profile image error", nil))
+			}
+			updateUser.ImgProfile = urlImage;
+		}
 
+		err = uc.srv.UpdateUser(uint(ID), ToRequertUser(updateUser));
 		if err != nil {
 			log.Print("Error", err.Error());
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil))

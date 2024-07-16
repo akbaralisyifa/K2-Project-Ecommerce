@@ -7,11 +7,12 @@ type LoginResponse struct {
 }
 
 type UserResponse struct {
-	ID       uint   `json:"id"`
-	Fullname string `json:"fullname"`
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	Address  string `json:"address"`
+	ID         uint   `json:"id"`
+	Fullname   string `json:"fullname"`
+	Email      string `json:"email"`
+	Phone      string `json:"phone"`
+	Address    string `json:"address"`
+	ImgProfile string `json:"image_profile"`
 }
 
 func ToLoginResponse(token string) LoginResponse {
@@ -27,5 +28,6 @@ func ToGetUserResponse(input users.User) UserResponse {
 		Email:    input.Email,
 		Phone:    input.Phone,
 		Address:  input.Address,
+		ImgProfile: input.ImgProfile,
 	}
 }
