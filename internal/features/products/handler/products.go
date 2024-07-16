@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"ecommerce/internal/features/users"
+	"ecommerce/internal/features/products"
 	"ecommerce/internal/helpers"
 	"ecommerce/internal/utils"
 	"log"
@@ -11,19 +11,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type UserController struct {
-	srv users.Service
+type ProductController struct {
+	srv products.Service
 }
 
-func NewUserController(s users.Service) users.Handler {
-	return &UserController{
+func NewProductController(s products.Service) products.Handler {
+	return &ProductController{
 		srv: s,
 	}
 }
 
-func (uc *UserController) Register() echo.HandlerFunc {
+func (uc *ProductController) AddProduct() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var input UserRequest
+		var input ProductInput
 
 		err := c.Bind(&input)
 		if err != nil {
@@ -31,7 +31,7 @@ func (uc *UserController) Register() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "bad requeste", nil))
 		}
 
-		err = uc.srv.Register(ToModelUser(input))
+		err = uc.srv.AddProduct(ToModelProduct(input))
 		if err != nil {
 			log.Print("Error", err.Error())
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", nil))
@@ -41,47 +41,27 @@ func (uc *UserController) Register() echo.HandlerFunc {
 	}
 }
 
-func (uc *UserController) Login() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		var input LoginRequest
-
-		err := c.Bind(&input)
-		if err != nil {
-			log.Print("Error", err.Error())
-			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "bad request", nil))
-		}
-
-		_, token, err := uc.srv.Login(input.Email, input.Password)
-		if err != nil {
-			log.Print("Error", err.Error())
-			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", nil))
-		}
-
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "user logged in", ToLoginResponse(token)))
-	}
-}
-
-func (uc *UserController) GetUser() echo.HandlerFunc {
+func (uc *ProductController) GetProduct() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		ID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
 
-		result, err := uc.srv.GetUser(uint(ID))
+		result, err := uc.srv.GetProduct(uint(ID))
 		if err != nil {
 			log.Print("Error", err.Error())
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "User successfully retrieved", ToGetUserResponse(result)))
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "Product successfully retrieved", ToGetProductResponse(result)))
 	}
 }
 
-func (uc *UserController) UpdateUser() echo.HandlerFunc {
+func (uc *ProductController) UpdateProduct() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		ID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
 
-		var input GetUpdateRequest
+		var input ProductInput
 		err := c.Bind(&input)
 
 		if err != nil {
@@ -89,28 +69,28 @@ func (uc *UserController) UpdateUser() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "Invalid request parameters", nil))
 		}
 
-		err = uc.srv.UpdateUser(uint(ID), ToRequertUser(input))
+		err = uc.srv.UpdateProduct(uint(ID), ToModelProduct(input))
 
 		if err != nil {
 			log.Print("Error", err.Error())
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil))
 		}
 
-		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "User profile updated", nil))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "Product profile updated", nil))
 	}
 }
 
-func (uc *UserController) DeleteUser() echo.HandlerFunc {
+func (uc *ProductController) DeleteProduct() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
 
-		err := uc.srv.DeleteUser(uint(ID))
+		err := uc.srv.DeleteProduct(uint(ID))
 
 		if err != nil {
 			log.Print("Error", err.Error())
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "User account deleted", nil))
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "Product account deleted", nil))
 	}
 }

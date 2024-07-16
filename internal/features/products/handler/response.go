@@ -1,31 +1,21 @@
 package handler
 
-import "ecommerce/internal/features/users"
+import "ecommerce/internal/features/products"
 
-type LoginResponse struct {
-	Token string `json:"token"`
+type ProductResponse struct {
+	ID          uint   `json:"id"`
+	Description string `json:"fullname"`
+	Category    string `json:"email"`
+	Price       int    `json:"phone"`
+	Stock       int    `json:"address"`
 }
 
-type UserResponse struct {
-	ID       uint   `json:"id"`
-	Fullname string `json:"fullname"`
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	Address  string `json:"address"`
-}
-
-func ToLoginResponse(token string) LoginResponse {
-	return LoginResponse{
-		Token: token,
-	}
-}
-
-func ToGetUserResponse(input users.User) UserResponse {
-	return UserResponse{
-		ID:       input.ID,
-		Fullname: input.Fullname,
-		Email:    input.Email,
-		Phone:    input.Phone,
-		Address:  input.Address,
+func ToGetProductResponse(input products.Product) ProductResponse {
+	return ProductResponse{
+		ID:          input.ID,
+		Description: input.Description,
+		Category:    input.Category,
+		Price:       input.Price,
+		Stock:       input.Stock,
 	}
 }

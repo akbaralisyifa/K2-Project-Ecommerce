@@ -22,6 +22,9 @@ type Query interface {
 
 type Service interface {
 	AddProduct(newProduct Product) error
+	GetProduct(ID uint) (Product, error)
+	UpdateProduct(ID uint, updateProduct Product) error
+	DeleteProduct(ID uint) error
 }
 
 type AddProductValidation struct {

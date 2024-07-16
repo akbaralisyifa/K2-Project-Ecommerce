@@ -3,11 +3,11 @@ package handler
 import "ecommerce/internal/features/products"
 
 type ProductInput struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Category    string `json:"category"`
-	Price       int    `json:"price"`
-	Stock       int    `json:"stock"`
+	Name        string `json:"name" form:"name"`
+	Description string `json:"description" form:"description"`
+	Category    string `json:"category" form:"category"`
+	Price       int    `json:"price" form:"price"`
+	Stock       int    `json:"stock" form:"stock"`
 }
 
 func ToModelProduct(pr ProductInput) products.Product {
