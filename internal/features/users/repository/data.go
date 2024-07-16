@@ -13,6 +13,7 @@ type Users struct {
 	Password 	string
 	Phone		string
 	Address		string
+	ImgProfile	string
 };
 
 // dari database di pindah ke entity
@@ -24,6 +25,7 @@ func (u *Users) ToUsersEntity() users.User{
 		Password: u.Password,
 		Phone: 	  u.Phone,
 		Address:  u.Address,
+		ImgProfile: u.ImgProfile,
 	}
 }
 
@@ -35,5 +37,6 @@ func ToUsersQuery(input users.User) Users {
 		Password: input.Password,
 		Phone:	  input.Phone,
 		Address:  input.Address,
+		ImgProfile: input.ImgProfile,
 	}
 }

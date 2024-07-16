@@ -14,11 +14,12 @@ type LoginRequest struct {
 }
 
 type GetUpdateRequest struct {
-	Fullname string `json:"fullname"`
-	Email    string `json:"email"`
-	Password string `json:"password"`	
-	Phone 	 string `json:"phone"`	
-	Address  string `json:"address"`	
+	Fullname 	string `json:"fullname"`
+	Email    	string `json:"email"`
+	Password 	string `json:"password"`	
+	Phone 	 	string `json:"phone"`	
+	Address     string `json:"address"`	
+	ImgProfile  string `json:"image_profile"`	
 }
 
 func ToModelUser(ur UserRequest) users.User{
@@ -31,10 +32,11 @@ func ToModelUser(ur UserRequest) users.User{
 
 func ToRequertUser(ur GetUpdateRequest) users.User {
 	return users.User{
-		Fullname: ur.Fullname,
-		Email:    ur.Email,
-		Password: ur.Password,
-		Phone:    ur.Phone,
-		Address:  ur.Address,
+		Fullname: 	ur.Fullname,
+		Email:    	ur.Email,
+		Password: 	ur.Password,
+		Phone:    	ur.Phone,
+		Address:  	ur.Address,
+		ImgProfile: ur.ImgProfile,
 	}
 }

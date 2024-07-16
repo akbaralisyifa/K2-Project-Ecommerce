@@ -17,6 +17,7 @@ type setting struct {
 	Port 		string
 	DBName 		string
 	JWTSecrat	string
+	CldKey		string
 }
 
 	func ImportSetting() setting {
@@ -34,6 +35,7 @@ type setting struct {
 		result.DBName 	= os.Getenv("DB_NAME");
 		result.Password = os.Getenv("DB_PASSWORD");
 		result.JWTSecrat= os.Getenv("JWT_SECRATE");
+		result.CldKey   = os.Getenv("CLOUDINARY_KEY");
 
 		return result;
 	}
