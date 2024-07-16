@@ -1,7 +1,10 @@
 package products
 
+import "github.com/labstack/echo/v4"
+
 type Product struct {
 	ID          uint
+	UserID      uint
 	Name        string
 	Category    string
 	Description string
@@ -11,29 +14,25 @@ type Product struct {
 }
 
 type Handler interface {
+	AddProduct() echo.HandlerFunc
+	GetProduct() echo.HandlerFunc
+	UpdateProduct() echo.HandlerFunc
+	DeleteProduct() echo.HandlerFunc
+	GetAllProducts() echo.HandlerFunc
 }
 
 type Query interface {
-	AddProduct(newProducts Product) error
+	AddProduct(newProducts Product, userID uint) error
 	GetProduct(ID uint) (Product, error)
-	UpdateProduct(ID uint, updateProduct Product) error
-	DeleteProduct(ID uint) error
+	UpdateProduct(productID uint, updatedProduct Product) error
+	DeleteProduct(productID uint) error
+	GetAllProducts() ([]Product, error)
 }
 
 type Service interface {
-	AddProduct(newProduct Product) error
+	AddProduct(newProduct Product, userID uint) error
 	GetProduct(ID uint) (Product, error)
-	UpdateProduct(ID uint, updateProduct Product) error
-	DeleteProduct(ID uint) error
-}
-
-type AddProductValidation struct {
-	Name  string `validate:"required"`
-	Price int    `validate:"required, number"`
-	Stock int    `validate:"required, number"`
-}
-
-type LoginValidation struct {
-	Email    string `validate:"required,email"`
-	Password string `validate:"required"`
+	UpdateProduct(productID uint, userID uint, updatedProduct Product) error
+	DeleteProduct(productID uint, userID uint) error
+	GetAllProducts() ([]Product, error)
 }

@@ -8,6 +8,7 @@ type ProductInput struct {
 	Category    string `json:"category" form:"category"`
 	Price       int    `json:"price" form:"price"`
 	Stock       int    `json:"stock" form:"stock"`
+	ImageUrl    string
 }
 
 func ToModelProduct(pr ProductInput) products.Product {
@@ -17,5 +18,6 @@ func ToModelProduct(pr ProductInput) products.Product {
 		Category:    pr.Category,
 		Price:       pr.Price,
 		Stock:       pr.Stock,
+		ImageUrl:    pr.ImageUrl,
 	}
 }

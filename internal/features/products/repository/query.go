@@ -17,8 +17,9 @@ func NewProductModels(connect *gorm.DB) products.Query {
 }
 
 // Add Product
-func (pm *ProductModels) AddProduct(newProducts products.Product) error {
+func (pm *ProductModels) AddProduct(newProducts products.Product, userID uint) error {
 	cnvData := ToProductsQuery(newProducts)
+	cnvData.UserID = userID
 	err := pm.db.Create(&cnvData).Error
 
 	if err != nil {
@@ -68,4 +69,17 @@ func (pm *ProductModels) DeleteProduct(ID uint) error {
 	}
 
 	return nil
+}
+
+func (pm *ProductModels) GetAllProducts() ([]products.Product, error) {
+	var result []Products
+	var resultConvert []products.Product
+	err := pm.db.Find(&result).Error
+	if err != nil {
+		return []products.Product{}, err
+	}
+	for _, v := range result {
+		resultConvert = append(resultConvert, v.ToProductsEntity())
+	}
+	return resultConvert, nil
 }

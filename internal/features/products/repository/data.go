@@ -8,6 +8,7 @@ import (
 
 type Products struct {
 	gorm.Model
+	UserID      uint
 	Name        string
 	Category    string
 	Description string
@@ -20,6 +21,7 @@ type Products struct {
 func (p *Products) ToProductsEntity() products.Product {
 	return products.Product{
 		ID:          p.ID,
+		UserID:      p.UserID,
 		Name:        p.Name,
 		Category:    p.Category,
 		Description: p.Description,
@@ -32,6 +34,7 @@ func (p *Products) ToProductsEntity() products.Product {
 // dari entity pindah ke database
 func ToProductsQuery(input products.Product) Products {
 	return Products{
+		UserID:      input.UserID,
 		Name:        input.Name,
 		Category:    input.Category,
 		Description: input.Description,

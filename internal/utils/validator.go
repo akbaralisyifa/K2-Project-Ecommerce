@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"ecommerce/internal/features/products"
 	"ecommerce/internal/features/users"
 	"errors"
 	"log"
@@ -12,7 +11,6 @@ import (
 type ValidatorUtilityInterface interface {
 	RegisterValidator(username string, email string, password string) error
 	LoginValidation(email string, password string) error
-	AddProductValidation(name string, price int, Stock int) error
 }
 
 type ValidateUtility struct {
@@ -42,17 +40,6 @@ func (vu *ValidateUtility) LoginValidation(email string, password string) error 
 	if err != nil {
 		log.Println("login validator error", err.Error())
 		return errors.New("login validator error")
-	}
-
-	return nil
-}
-
-func (vu *ValidateUtility) AddProductValidation(name string, price int, stock int) error {
-	err := vu.vldt.Struct(products.AddProductValidation{Name: name, Price: price, Stock: stock})
-
-	if err != nil {
-		log.Println("add product validator error", err.Error())
-		return errors.New("add product validator error")
 	}
 
 	return nil

@@ -5,6 +5,8 @@ import (
 	"ecommerce/internal/utils"
 	"errors"
 	"log"
+
+	"gorm.io/gorm"
 )
 
 type ProductServices struct {
@@ -23,16 +25,10 @@ func NewProductService(q products.Query, p utils.HashingPwInterface, v utils.Val
 	}
 }
 
-func (ps *ProductServices) AddProduct(newProduct products.Product) error {
-	// validasi data
-	err := ps.vld.AddProductValidation(newProduct.Name, newProduct.Price, newProduct.Stock)
-	if err != nil {
-		log.Println("validator add product error", err.Error())
-		return err
-	}
+func (ps *ProductServices) AddProduct(newProduct products.Product, userID uint) error {
 
 	// add product
-	err = ps.qry.AddProduct(newProduct)
+	err := ps.qry.AddProduct(newProduct, userID)
 	if err != nil {
 		log.Println("add product sql error:", err.Error())
 		return errors.New("internal server error")
@@ -52,10 +48,19 @@ func (ps *ProductServices) GetProduct(ID uint) (products.Product, error) {
 	return result, nil
 }
 
-func (ps *ProductServices) UpdateProduct(ID uint, updateProduct products.Product) error {
+func (ps *ProductServices) UpdateProduct(productID uint, userID uint, updatedProduct products.Product) error {
+	result, err := ps.qry.GetProduct(productID)
+	if err != nil {
+		log.Print("not found", err.Error())
+		return errors.New("internal server error")
+	}
+
+	if result.UserID != userID {
+		return errors.New(" unauthorize update action")
+	}
 
 	// update Product
-	err := ps.qry.UpdateProduct(ID, updateProduct)
+	err = ps.qry.UpdateProduct(productID, updatedProduct)
 
 	if err != nil {
 		log.Print("update Product query error", err.Error())
@@ -65,13 +70,37 @@ func (ps *ProductServices) UpdateProduct(ID uint, updateProduct products.Product
 	return nil
 }
 
-func (ps *ProductServices) DeleteProduct(ID uint) error {
-	err := ps.qry.DeleteProduct(ID)
+func (ps *ProductServices) DeleteProduct(productID uint, userID uint) error {
+	result, err := ps.qry.GetProduct(productID)
+	if err != nil {
+		log.Print("not found", err.Error())
+		return errors.New("internal server error")
+	}
+
+	if result.UserID != userID {
+		return errors.New(" unauthorize delete action")
+	}
+	err = ps.qry.DeleteProduct(productID)
 
 	if err != nil {
 		log.Print("delete Product query error", err.Error())
-		return errors.New("interval server error")
+		return errors.New("internal server error")
 	}
 
 	return nil
+}
+
+func (ps *ProductServices) GetAllProducts() ([]products.Product, error) {
+
+	result, err := ps.qry.GetAllProducts()
+	msg := "internal server error"
+	if err != nil {
+
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			msg = "not found"
+		}
+		return []products.Product{}, errors.New(msg)
+	}
+
+	return result, nil
 }
