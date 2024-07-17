@@ -45,7 +45,7 @@ func InitProductRouter(db *gorm.DB) products.Handler {
 	pc := phand.NewProductController(ps)
 
 	return pc
-}
+};
 
 func InitCartItemRouter(db *gorm.DB) cartitems.Handler {
 	pw := utils.NewHashingPassword()
