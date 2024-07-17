@@ -14,12 +14,12 @@ type LoginRequest struct {
 }
 
 type GetUpdateRequest struct {
-	Fullname 	string `json:"fullname"`
-	Email    	string `json:"email"`
-	Password 	string `json:"password"`	
-	Phone 	 	string `json:"phone"`	
-	Address     string `json:"address"`	
-	ImgProfile  string `json:"image_profile"`	
+	Fullname   string `json:"fullname" form:"fullname"`
+    Email      string `json:"email" form:"email"`
+    Password   string `json:"password" form:"password"`
+    Phone      string `json:"phone" form:"phone"` 
+    Address    string `json:"address" form:"address"`
+    ImgProfile string `json:"image_profile" form:"image_profile"`	
 }
 
 func ToModelUser(ur UserRequest) users.User{
