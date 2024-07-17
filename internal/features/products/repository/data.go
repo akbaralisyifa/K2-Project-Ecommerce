@@ -1,6 +1,7 @@
 package repository
 
 import (
+	crep "ecommerce/internal/features/cartitems/repository"
 	"ecommerce/internal/features/products"
 
 	"gorm.io/gorm"
@@ -15,6 +16,7 @@ type Products struct {
 	Price       int
 	Stock       int
 	ImageUrl    string
+	CartItems   crep.CartItems `gorm:"foreignKey:ProductID"`
 }
 
 // dari database di pindah ke entity

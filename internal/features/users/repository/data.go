@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"ecommerce/internal/features/orders/repository"
+	crep "ecommerce/internal/features/cartitems/repository"
 	prep "ecommerce/internal/features/products/repository"
 	"ecommerce/internal/features/users"
 
@@ -16,8 +16,8 @@ type Users struct {
 	Phone      string
 	Address    string
 	ImgProfile string
-	Products   []prep.Products `gorm:"foreignKey:UserID"`
-	Carts      []repository.Orders `gorm:"foreignKey:UserID"`
+	Products   []prep.Products  `gorm:"foreignKey:UserID"`
+	CartItem   []crep.CartItems `gorm:"foreignKey:UserID"`
 }
 
 // dari database di pindah ke entity
