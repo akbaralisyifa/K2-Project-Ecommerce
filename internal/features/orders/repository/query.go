@@ -72,4 +72,23 @@ func (om *OrderModels) GetOrderItems(OrderID uint) ([]orders.OrderItems, error){
 	}
 
 	return ToOrderItemsGetAll(result), nil;
+};
+
+
+// fungsi checkout
+// fungsi : - create order - create order item - delete carts
+func (om *OrderModels) Checkout(newOrder orders.Order, newOrderItem orders.OrderItems) error {
+	err := om.CreateOrders(newOrder);
+
+	if err != nil {
+		return err
+	}
+
+	err = om.CreateOrderItems(newOrderItem);
+
+	if err != nil {
+		return err
+	};
+
+	return nil;
 }

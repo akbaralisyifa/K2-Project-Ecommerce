@@ -3,7 +3,6 @@ package orders
 type Order struct {
 	ID              uint
 	UserID          uint
-	CartsID         uint
 	PaymentMethod   string
 	ShippingAddress string
 	Status          string
@@ -29,4 +28,9 @@ type Query interface {
 }
 
 type Service interface {
+	CreateOrders(newOrders Order) error
+	GetAllOrder(userID uint) ([]Order, error)
+	UpdateOrderStatus(OrderID uint, newStatus string) error
+	CreateOrderItems(newOrderItem OrderItems) error
+	GetOrderItems(OrderID uint) ([]OrderItems, error)
 }

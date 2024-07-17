@@ -40,7 +40,7 @@ func InitProductRouter(db *gorm.DB) products.Handler {
 	pc := phand.NewProductController(ps)
 
 	return pc
-}
+};
 
 func main() {
 	e := echo.New()
