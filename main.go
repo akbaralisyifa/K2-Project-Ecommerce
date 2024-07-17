@@ -2,6 +2,7 @@ package main
 
 import (
 	"ecommerce/config"
+	"ecommerce/internal/features/cartitems"
 	"ecommerce/internal/features/products"
 	"ecommerce/internal/features/users"
 	"ecommerce/internal/features/users/handler"
@@ -13,6 +14,10 @@ import (
 	phand "ecommerce/internal/features/products/handler"
 	prep "ecommerce/internal/features/products/repository"
 	pserv "ecommerce/internal/features/products/service"
+
+	chand "ecommerce/internal/features/cartitems/handler"
+	crep "ecommerce/internal/features/cartitems/repository"
+	cserv "ecommerce/internal/features/cartitems/service"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -42,12 +47,23 @@ func InitProductRouter(db *gorm.DB) products.Handler {
 	return pc
 }
 
+func InitCartItemRouter(db *gorm.DB) cartitems.Handler {
+	pw := utils.NewHashingPassword()
+	vl := utils.NewValidatorUtility(*validator.New())
+	jw := utils.NewJwtUtility()
+	cm := crep.NewCartItemModels(db)
+	cs := cserv.NewCartItemService(cm, pw, vl, jw)
+	cc := chand.NewCartItemController(cs)
+
+	return cc
+}
+
 func main() {
 	e := echo.New()
 	setup := config.ImportSetting()
 	connect, _ := config.ConnectDB(&setup)
 
-	connect.AutoMigrate(&repository.Users{}, &prep.Products{})
+	connect.AutoMigrate(&repository.Users{}, &prep.Products{}, &crep.CartItems{})
 
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
@@ -55,7 +71,8 @@ func main() {
 
 	ur := InitUserRouter(connect)
 	pr := InitProductRouter(connect)
-	routes.InitRoute(e, ur, pr)
+	cr := InitCartItemRouter(connect)
+	routes.InitRoute(e, ur, pr, cr)
 
 	e.Logger.Fatal(e.Start(":6000"))
 }

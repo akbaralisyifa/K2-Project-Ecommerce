@@ -11,6 +11,30 @@ type CartItem struct {
 	TotalPrice uint
 }
 
+type User struct {
+	ID         uint
+	Fullname   string
+	Email      string
+	Password   string
+	Phone      string
+	Address    string
+	ImgProfile string
+	CartItems  []CartItem
+	Products   []Product
+}
+
+type Product struct {
+	ID          uint
+	UserID      uint
+	Name        string
+	Category    string
+	Description string
+	Price       int
+	Stock       int
+	ImageUrl    string
+	CartItem    CartItem
+}
+
 type Handler interface {
 	AddCartItem() echo.HandlerFunc
 	DeleteCartItem() echo.HandlerFunc
@@ -22,8 +46,8 @@ type Query interface {
 	AddCartItem(newCartItems CartItem) error
 	GetAllCartItems(userID uint) ([]CartItem, error)
 	DeleteCartItem(productID uint, userID uint) error
-	//	GetProduct(productID uint) (pent.Product, error)
 	UpdateCartItem(newCartItems CartItem) error
+	GetProduct(productID uint) (Product, error)
 }
 
 type Service interface {

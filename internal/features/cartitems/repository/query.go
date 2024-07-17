@@ -82,3 +82,15 @@ func (cm *CartItemModels) GetAllCartItems(userID uint) ([]cartitems.CartItem, er
 	}
 	return resultConvert, nil
 }
+
+// Get one data product
+func (cm *CartItemModels) GetProduct(productID uint) (cartitems.Product, error) {
+	var result Products
+	err := cm.db.Where("id = ?", productID).First(&result).Error
+
+	if err != nil {
+		return cartitems.Product{}, err
+	}
+
+	return result.ToProductsEntity(), nil
+}

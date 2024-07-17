@@ -1,7 +1,7 @@
 package repository
 
 import (
-	crep "ecommerce/internal/features/carts/repository"
+	crep "ecommerce/internal/features/cartitems/repository"
 	"ecommerce/internal/features/products"
 
 	"gorm.io/gorm"

@@ -28,8 +28,22 @@ func NewCartItemService(q cartitems.Query, p utils.HashingPwInterface, v utils.V
 func (cs *CartItemServices) AddCartItem(newCartItem cartitems.CartItem, userID uint) error {
 
 	// add Cart
+
+	result, err := cs.qry.GetProduct(newCartItem.ProductID)
+	if err != nil {
+		log.Print("get product query error", err.Error())
+		return errors.New("internal server error")
+	}
+
+	if result.Stock < int(newCartItem.Qty) {
+		log.Print("Stock not enough for request")
+		return errors.New("internal server error")
+	}
+
 	newCartItem.UserID = userID
-	_, err := cs.qry.GetCartItem(newCartItem.ProductID, newCartItem.UserID)
+	newCartItem.TotalPrice = uint(result.Price) * newCartItem.Qty
+
+	_, err = cs.qry.GetCartItem(newCartItem.ProductID, newCartItem.UserID)
 	if err != nil {
 		if err.Error() == gorm.ErrRecordNotFound.Error() {
 			err = cs.qry.AddCartItem(newCartItem)
@@ -37,8 +51,15 @@ func (cs *CartItemServices) AddCartItem(newCartItem cartitems.CartItem, userID u
 				log.Print("add cart item query error", err.Error())
 				return errors.New("internal server error")
 			}
+			return nil
 		}
 		return errors.New("internal server error")
+	}
+
+	if int(newCartItem.Qty) < 1 {
+		log.Print("item deleted")
+		cs.qry.DeleteCartItem(newCartItem.ProductID, newCartItem.UserID)
+		return nil
 	}
 
 	err = cs.qry.UpdateCartItem(newCartItem)
