@@ -98,17 +98,19 @@ func (us *UserServices) GetUser(ID uint) (users.User, error){
 
 func (us *UserServices) UpdateUser(ID uint, updateUser users.User) error {
 
-	hashPw, err := us.pwd.GeneretePassword(updateUser.Password);
-
-	if err != nil {
-		log.Print("update generete password error", err.Error())
-		return errors.New("update generete password error");
+	if updateUser.Password != "" {
+		hashPw, err := us.pwd.GeneretePassword(updateUser.Password);
+	
+		if err != nil {
+			log.Print("update generete password error", err.Error())
+			return errors.New("update generete password error");
+		}
+	
+		updateUser.Password = string(hashPw);
 	}
 
-	updateUser.Password = string(hashPw);
-
 	// update user
-	err = us.qry.UpdateUser(ID, updateUser);
+	err := us.qry.UpdateUser(ID, updateUser);
 
 	if err != nil {
 		log.Print("update user query error", err.Error())
