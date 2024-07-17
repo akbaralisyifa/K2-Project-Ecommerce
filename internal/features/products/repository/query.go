@@ -43,7 +43,8 @@ func (pm *ProductModels) GetProduct(ID uint) (products.Product, error) {
 
 // update data product
 func (pm *ProductModels) UpdateProduct(ID uint, updateProduct products.Product) error {
-	cnvQuery := ToProductsQuery(updateProduct)
+	cnvQuery := ToProductsQuery(updateProduct);
+
 	qry := pm.db.Where("id = ?", ID).Updates(&cnvQuery)
 
 	if qry.Error != nil {

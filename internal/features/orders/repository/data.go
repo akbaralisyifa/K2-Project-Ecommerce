@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"ecommerce/internal/features/cartitems"
 	"ecommerce/internal/features/orders"
 
 	"gorm.io/gorm"
@@ -49,13 +50,28 @@ func (oi *OrderItems) ToOrderItemEntity() orders.OrderItems {
 	}
 }
 
-func ToOrderItemsQuery(input orders.OrderItems) OrderItems{
+func ToOrderItemQuery(input orders.OrderItems) OrderItems{
 	return OrderItems{
 		OrderID: input.OrderID,
 		ProductID: input.ProductID,
 		Quantity: input.Quantity,
 		TotalPrice: input.TotalPrice,
 	}
+}
+
+func ToOrderItemsQuery(orderID uint, inputOrders []cartitems.CartItem) []OrderItems{
+	ordItems := make([]OrderItems, len(inputOrders));
+
+	for i, val := range inputOrders{
+		ordItems[i] = OrderItems{
+			OrderID: orderID,
+			ProductID: val.ProductID,
+			Quantity: int(val.Qty),
+			TotalPrice:int(val.TotalPrice),
+		}
+	}
+
+	return ordItems
 }
 
 // function get All Order Items
