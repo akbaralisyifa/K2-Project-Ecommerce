@@ -58,15 +58,23 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 	cg.GET("", ch.GetAllCartItems())
 	cg.DELETE("/:id", ch.DeleteCartItem())
 
-
+	// checkout
 	c.POST("/checkout", oh.Checkout(), echojwt.WithConfig(
 		echojwt.Config{
 			SigningKey:    []byte(secrateJwt),
 			SigningMethod: jwt.SigningMethodHS256.Name,
 		},
 	));
-
+	
+	// get semua 
 	c.GET("/orders", oh.GetAllOrder(), echojwt.WithConfig(
+		echojwt.Config{
+			SigningKey:    []byte(secrateJwt),
+			SigningMethod: jwt.SigningMethodHS256.Name,
+		},
+	))
+
+	c.GET("/order-history", oh.GetAllOrderHistory(), echojwt.WithConfig(
 		echojwt.Config{
 			SigningKey:    []byte(secrateJwt),
 			SigningMethod: jwt.SigningMethodHS256.Name,

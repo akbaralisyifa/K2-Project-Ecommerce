@@ -29,6 +29,7 @@ func (or *Orders) ToOrderEntity() orders.Order {
 		UserID: 		 or.UserID,
 		PaymentMethod: 	 or.PaymentMethod,
 		ShippingAddress: or.ShippingAddress,
+		Status: 		 or.Status,	
 		OrderItems: 	 nil,
 	}
 }
