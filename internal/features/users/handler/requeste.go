@@ -3,14 +3,14 @@ package handler
 import "ecommerce/internal/features/users"
 
 type UserRequest struct {
-	Fullname string `json:"fullname"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Fullname string `json:"fullname" form:"fullname"`
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
 }
 
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
 }
 
 type GetUpdateRequest struct {
