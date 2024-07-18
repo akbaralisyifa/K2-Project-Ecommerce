@@ -3,14 +3,14 @@ package handler
 import "ecommerce/internal/features/users"
 
 type UserRequest struct {
-	Fullname string `json:"fullname"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Fullname string `json:"fullname" form:"fullname"`
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
 }
 
 type LoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
 }
 
 type GetUpdateRequest struct {
@@ -20,12 +20,6 @@ type GetUpdateRequest struct {
 	Phone      string `json:"phone" form:"phone"`
 	Address    string `json:"address" form:"address"`
 	ImgProfile string
-	Fullname   string `json:"fullname" form:"fullname" `
-	Email      string `json:"email" form:"email" `
-	Password   string `json:"password" form:"password" `
-	Phone      string `json:"phone" form:"phone" `
-	Address    string `json:"address" form:"address" `
-	ImgProfile string `json:"image_profile" form:"image_profile" `
 }
 
 func ToModelUser(ur UserRequest) users.User {
