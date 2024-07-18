@@ -11,43 +11,44 @@ import (
 )
 
 type setting struct {
-	User 		string
-	Host 		string
-	Password 	string
-	Port 		string
-	DBName 		string
-	JWTSecrat	string
-	CldKey		string
+	User        string
+	Host        string
+	Password    string
+	Port        string
+	DBName      string
+	JWTSecrat   string
+	CldKey      string
+	MidTransKey string
 }
 
-	func ImportSetting() setting {
-		var result setting
+func ImportSetting() setting {
+	var result setting
 
-		err := godotenv.Load(".env");
+	err := godotenv.Load(".env")
 
-		if err != nil {
-			return	 setting{}
-		};
-
-		result.User 	= os.Getenv("DB_USER");
-		result.Host		= os.Getenv("DB_HOST");
-		result.Port		= os.Getenv("DB_PORT");
-		result.DBName 	= os.Getenv("DB_NAME");
-		result.Password = os.Getenv("DB_PASSWORD");
-		result.JWTSecrat= os.Getenv("JWT_SECRATE");
-		result.CldKey   = os.Getenv("CLOUDINARY_KEY");
-
-		return result;
+	if err != nil {
+		return setting{}
 	}
 
-	func ConnectDB(s *setting)(*gorm.DB, error){
-		var connStr = fmt.Sprintf("host=%s user=%s password=%s port=%s dbname=%s", s.Host, s.User, s.Password, s.Port, s.DBName)
-		db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
+	result.User = os.Getenv("DB_USER")
+	result.Host = os.Getenv("DB_HOST")
+	result.Port = os.Getenv("DB_PORT")
+	result.DBName = os.Getenv("DB_NAME")
+	result.Password = os.Getenv("DB_PASSWORD")
+	result.JWTSecrat = os.Getenv("JWT_SECRATE")
+	result.CldKey = os.Getenv("CLOUDINARY_KEY")
+	result.MidTransKey = os.Getenv("MIDTRANS_KEY")
+	return result
+}
 
-		if err != nil {
-			log.Fatal("Error config database ", err.Error())
-			return nil, err
-		}
+func ConnectDB(s *setting) (*gorm.DB, error) {
+	var connStr = fmt.Sprintf("host=%s user=%s password=%s port=%s dbname=%s", s.Host, s.User, s.Password, s.Port, s.DBName)
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 
-		return db, nil;
+	if err != nil {
+		log.Fatal("Error config database ", err.Error())
+		return nil, err
 	}
+
+	return db, nil
+}

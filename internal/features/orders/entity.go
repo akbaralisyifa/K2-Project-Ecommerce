@@ -12,7 +12,7 @@ type Order struct {
 	PaymentMethod   string       `json:"payment_method"`
 	ShippingAddress string       `json:"shipping_address"`
 	Status          string       `json:"status"`
-	TotalOrder		uint64		 `json:"total_order"`
+	TotalOrder      uint64       `json:"total_order"`
 	OrderItems      []OrderItems `json:"order_items"`
 }
 
@@ -35,16 +35,17 @@ type Query interface {
 	UpdateOrder(OrderID uint, updateOrder Order) error
 	CreateOrderItems(orderID uint, newOrderItems []cartitems.CartItem) error
 	GetOrderItems(OrderID uint) ([]OrderItems, error)
-	Checkout(UserID uint, newOrder Order, cartItems []cartitems.CartItem ) error 
+	Checkout(UserID uint, newOrder Order, cartItems []cartitems.CartItem) (uint, error)
 	GetAllOrderHistory(userID uint) ([]Order, error)
+	GetOrder(UserID uint) (Order, error)
 }
 
 type Service interface {
 	CreateOrders(newOrders Order) error
 	GetAllOrder(userID uint) ([]Order, error)
 	UpdateOrder(OrderID uint, updateOrder Order) error
-	CreateOrderItems(orderID uint, newOrderItem []cartitems.CartItem) error 
+	CreateOrderItems(orderID uint, newOrderItem []cartitems.CartItem) error
 	GetOrderItems(OrderID uint) ([]OrderItems, error)
-	Checkout(UserID uint, newOrders Order, artItems []cartitems.CartItem) error
+	Checkout(UserID uint, newOrders Order, artItems []cartitems.CartItem) (string, error)
 	GetAllOrderHistory(userID uint) ([]Order, error)
 }

@@ -1,36 +1,28 @@
 package utils
 
 import (
-	"log"
+	"ecommerce/config"
+	"strconv"
 
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
 )
 
-type midtransPayment struct {
-	snapClient snap.Client
-}
+func Payment(orderID uint, totalAmount uint64) (string, error) {
+	serverKey := config.ImportSetting().MidTransKey
+	s := snap.Client{}
 
-func NewMidtransPayment(serverKey string) midtransPayment {
-	return midtransPayment{
-		snapClient: snap.Client{ServerKey: serverKey, Env: midtrans.Sandbox},
-	}
-};
+	s.New(serverKey, midtrans.Sandbox)
 
-
-func (mp *midtransPayment) RequestPayment(orderId string, amount int64)(string, error){
 	req := snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID: orderId,
-			GrossAmt: amount,
+			OrderID:  "payment-" + strconv.Itoa(int(orderID)),
+			GrossAmt: int64(totalAmount),
 		},
-	};
-
-	res, err := mp.snapClient.CreateTransaction(&req)
+	}
+	res, err := s.CreateTransaction(&req)
 	if err != nil {
-		log.Println("midtrans error :", err.Error())
 		return "", err
-	};
-
+	}
 	return res.RedirectURL, nil
 }

@@ -3,7 +3,7 @@ package handler
 import "ecommerce/internal/features/orders"
 
 type CreateOrderRequest struct {
-	PaymentMethod   string `json:"payment_method"`
+	PaymentMethod   string
 	ShippingAddress string `json:"shipping_address"`
 }
 

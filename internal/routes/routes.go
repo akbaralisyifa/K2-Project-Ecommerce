@@ -42,7 +42,7 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 		},
 	))
 
-	pg.GET("/productbyuser", ph.GetAllProductsByOwner())
+	pg.GET("/productbyowner", ph.GetAllProductsByOwner())
 	pg.POST("", ph.AddProduct())
 	pg.PUT("/:id", ph.UpdateProduct())
 	pg.DELETE("/:id", ph.DeleteProduct())

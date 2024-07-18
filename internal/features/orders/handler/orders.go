@@ -39,16 +39,15 @@ func (oc *OrderController) GetAllOrder() echo.HandlerFunc {
 	}
 }
 
-
-func (oc *OrderController) GetAllOrderHistory() echo.HandlerFunc{
-	return func (c echo.Context) error {
+func (oc *OrderController) GetAllOrderHistory() echo.HandlerFunc {
+	return func(c echo.Context) error {
 		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
 
-		result, err := oc.srv.GetAllOrderHistory(uint(userID));
+		result, err := oc.srv.GetAllOrderHistory(uint(userID))
 
 		if err != nil {
-			log.Print("Error", err.Error());
-			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server errror", nil))	
+			log.Print("Error", err.Error())
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server errror", nil))
 		}
 		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "Orders retrieved", ToOrderResponse(result)))
 	}
@@ -72,13 +71,13 @@ func (oc *OrderController) Checkout() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, helpers.ResponseFormat(http.StatusBadRequest, "get all cart error", nil))
 		}
 
-		err = oc.srv.Checkout(uint(userID), newOrder, cartItems)
+		respond, err := oc.srv.Checkout(uint(userID), newOrder, cartItems)
 
 		if err != nil {
 			log.Print("Error", err.Error())
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", nil))
 		}
 
-		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "checkout success", nil))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "checkout success", ToCheckoutResponse(respond)))
 	}
 }
