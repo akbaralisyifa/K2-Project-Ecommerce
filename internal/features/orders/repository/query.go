@@ -46,6 +46,19 @@ func (om *OrderModels) GetAllOrder(UserID uint) ([]orders.Order, error) {
 	return ToOrderEntityGetAll(result) , nil;
 }
 
+func (om *OrderModels) GetAllOrderHistory(userID uint) ([]orders.Order, error) {
+	var result []Orders;
+
+	err := om.db.Debug().Model(&Orders{}).Where("status = 'success' AND user_id = ?", userID).Preload("OrderItems").Find(&result).Error
+	// err := om.db.Raw(qry, userID).Scan(&result).Error
+
+	if err != nil {
+		return []orders.Order{}, err;
+	};
+
+	return ToOrderEntityGetAll(result), nil;
+}
+
 func (om *OrderModels) UpdateOrder(OrderID uint, updateOrder orders.Order) error {
 	cnvData := ToOrderQuery(updateOrder)
 	err := om.db.Model(&Orders{}).Where("order_id = ?", OrderID).Updates(&cnvData).Error
@@ -84,6 +97,8 @@ func (om *OrderModels) GetOrderItems(OrderID uint) ([]orders.OrderItems, error){
 // fungsi : - create order - create order item - delete carts - update product
 func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, cartItems []cartitems.CartItem ) error {
 	tx := om.db.Begin();
+
+
 
 	orderID, err := om.CreateOrders(newOrder);
 	if err != nil {

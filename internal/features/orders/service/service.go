@@ -38,6 +38,18 @@ func (os *OrderService) GetAllOrder(userID uint) ([]orders.Order, error) {
 	return result, nil
 };
 
+func (os *OrderService) GetAllOrderHistory(userID uint) ([]orders.Order, error) {
+
+	
+	result, err := os.qry.GetAllOrderHistory(userID);
+	if err != nil {
+		log.Println("get order history error:", err.Error())
+		return []orders.Order{}, errors.New("internal erver error");
+	};
+
+	return result, nil;
+}
+
 // UpdateOrder(OrderID uint, updateOrder orders.Order) error
 func (os *OrderService) UpdateOrder(OrderID uint, updateOrders orders.Order) error {
 	err := os.qry.UpdateOrder(OrderID, updateOrders);
