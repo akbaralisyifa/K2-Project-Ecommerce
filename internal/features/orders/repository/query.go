@@ -3,7 +3,6 @@ package repository
 import (
 	"ecommerce/internal/features/cartitems"
 	"ecommerce/internal/features/orders"
-	"ecommerce/internal/features/products"
 
 	"gorm.io/gorm"
 )
@@ -11,14 +10,12 @@ import (
 type OrderModels struct {
 	db *gorm.DB
 	crt cartitems.Query
-	prd products.Query
 };
 
-func NewOrderModels(connect *gorm.DB, c cartitems.Query, p products.Query) orders.Query {
+func NewOrderModels(connect *gorm.DB, c cartitems.Query) orders.Query {
 	return &OrderModels{
 		db: connect,
 		crt: c,
-		prd: p,
 	}
 };
 
@@ -37,7 +34,7 @@ func (om *OrderModels) CreateOrders(newOrders orders.Order) (uint, error) {
 func (om *OrderModels) GetAllOrder(UserID uint) ([]orders.Order, error) {
 	var result []Orders;
 
-	err := om.db.Debug().Model(&Orders{}).Preload("OrderItems").Where("user_id = ? ", UserID).Find(&result).Error
+	err := om.db.Debug().Model(&Orders{}).Where("user_id = ? ", UserID).Preload("OrderItems").Find(&result).Error
 
 	if err != nil {
 		return []orders.Order{}, err;
@@ -46,9 +43,9 @@ func (om *OrderModels) GetAllOrder(UserID uint) ([]orders.Order, error) {
 	return ToOrderEntityGetAll(result) , nil;
 }
 
-func (om *OrderModels) UpdateOrderStatus(OrderID uint, newStatus string) error {
-	
-	err := om.db.Model(&Orders{}).Where("order_id = ?", OrderID).Update("status", newStatus).Error;
+func (om *OrderModels) UpdateOrder(OrderID uint, updateOrder orders.Order) error {
+	cnvData := ToOrderQuery(updateOrder)
+	err := om.db.Model(&Orders{}).Where("order_id = ?", OrderID).Updates(&cnvData).Error
 
 	if err != nil {
 		return err
@@ -82,12 +79,7 @@ func (om *OrderModels) GetOrderItems(OrderID uint) ([]orders.OrderItems, error){
 
 // fungsi checkout
 // fungsi : - create order - create order item - delete carts - update product
-func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, productID uint, updateProduct products.Product) error {
-	
-	cartItems, err := om.crt.GetAllCartItems(UserID);
-	if err != nil {
-		return err;
-	}
+func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, cartItems []cartitems.CartItem ) error {
 
 	orderID, err := om.CreateOrders(newOrder);
 	if err != nil {
@@ -99,15 +91,16 @@ func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, productID ui
 		return err
 	};
 	
-	err = om.crt.DeleteCartItem(productID, UserID)
+	err = om.crt.DeleteCartItemByUserID(UserID)
 	if err != nil {
 		return err
 	};
 
-	err = om.prd.UpdateProduct(productID, updateProduct);
-	if err != nil {
-		return err
-	};
+	// updateProduct products.Product
+	// err = om.prd.UpdateProduct(productID, updateProduct);
+	// if err != nil {
+	// 	return err
+	// };
 
 
 	return nil;
