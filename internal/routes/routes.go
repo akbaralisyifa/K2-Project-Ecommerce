@@ -3,6 +3,7 @@ package routes
 import (
 	"ecommerce/config"
 	"ecommerce/internal/features/cartitems"
+	"ecommerce/internal/features/orders"
 	"ecommerce/internal/features/products"
 	"ecommerce/internal/features/users"
 
@@ -11,7 +12,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems.Handler) {
+func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems.Handler, oh orders.Handler) {
 	// jwt key
 	secrateJwt := config.ImportSetting().JWTSecrat
 	c.POST("/register", uh.Register())
@@ -56,4 +57,19 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 	cg.POST("", ch.AddCartItem())
 	cg.GET("", ch.GetAllCartItems())
 	cg.DELETE("/:id", ch.DeleteCartItem())
+
+
+	c.POST("/checkout", oh.Checkout(), echojwt.WithConfig(
+		echojwt.Config{
+			SigningKey:    []byte(secrateJwt),
+			SigningMethod: jwt.SigningMethodHS256.Name,
+		},
+	));
+
+	c.GET("/orders", oh.GetAllOrder(), echojwt.WithConfig(
+		echojwt.Config{
+			SigningKey:    []byte(secrateJwt),
+			SigningMethod: jwt.SigningMethodHS256.Name,
+		},
+	))
 }

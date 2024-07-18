@@ -93,4 +93,21 @@ func (cm *CartItemModels) GetProduct(productID uint) (cartitems.Product, error) 
 	}
 
 	return result.ToProductsEntity(), nil
+};
+
+// delete cart item by userid 
+func (cm *CartItemModels) DeleteCartItemByUserID(UserID uint) error {
+
+	qry := `DELETE FROM cart_items WHERE user_id = ?`
+	result := cm.db.Exec(qry, UserID)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected < 1 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil;
 }

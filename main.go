@@ -3,6 +3,7 @@ package main
 import (
 	"ecommerce/config"
 	"ecommerce/internal/features/cartitems"
+	"ecommerce/internal/features/orders"
 	"ecommerce/internal/features/products"
 	"ecommerce/internal/features/users"
 	"ecommerce/internal/features/users/handler"
@@ -18,6 +19,10 @@ import (
 	chand "ecommerce/internal/features/cartitems/handler"
 	crep "ecommerce/internal/features/cartitems/repository"
 	cserv "ecommerce/internal/features/cartitems/service"
+
+	oHand "ecommerce/internal/features/orders/handler"
+	oQry "ecommerce/internal/features/orders/repository"
+	oSrv "ecommerce/internal/features/orders/service"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -45,17 +50,25 @@ func InitProductRouter(db *gorm.DB) products.Handler {
 	pc := phand.NewProductController(ps)
 
 	return pc
-}
+};
 
 func InitCartItemRouter(db *gorm.DB) cartitems.Handler {
-	pw := utils.NewHashingPassword()
-	vl := utils.NewValidatorUtility(*validator.New())
-	jw := utils.NewJwtUtility()
 	cm := crep.NewCartItemModels(db)
-	cs := cserv.NewCartItemService(cm, pw, vl, jw)
+	cs := cserv.NewCartItemService(cm)
 	cc := chand.NewCartItemController(cs)
 
 	return cc
+}
+
+func InitOrderRouter(db *gorm.DB) orders.Handler {
+	cm := crep.NewCartItemModels(db)
+	cs := cserv.NewCartItemService(cm)
+	pm := prep.NewProductModels(db);
+	om := oQry.NewOrderModels(db, cm, pm)
+	os := oSrv.NewOrderService(om)
+	oc := oHand.NewOrderController(os, cs)
+
+	return oc;
 }
 
 func main() {
@@ -63,7 +76,7 @@ func main() {
 	setup := config.ImportSetting()
 	connect, _ := config.ConnectDB(&setup)
 
-	connect.AutoMigrate(&repository.Users{}, &prep.Products{}, &crep.CartItems{})
+	connect.AutoMigrate(&repository.Users{}, &prep.Products{}, &crep.CartItems{}, &oQry.Orders{}, &oQry.OrderItems{})
 
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
@@ -72,7 +85,8 @@ func main() {
 	ur := InitUserRouter(connect)
 	pr := InitProductRouter(connect)
 	cr := InitCartItemRouter(connect)
-	routes.InitRoute(e, ur, pr, cr)
+	or := InitOrderRouter(connect)
+	routes.InitRoute(e, ur, pr, cr, or)
 
 	e.Logger.Fatal(e.Start(":6000"))
 }

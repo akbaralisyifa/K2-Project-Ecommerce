@@ -99,6 +99,16 @@ func (us *UserServices) UpdateUser(ID uint, updateUser users.User) error {
 
 	if updateUser.Password != "" {
 		hashPw, err := us.pwd.GeneretePassword(updateUser.Password)
+
+		if err != nil {
+			log.Print("update generete password error", err.Error())
+			return errors.New("update generete password error")
+		}
+
+		updateUser.Password = string(hashPw)
+	}
+	if updateUser.Password != "" {
+		hashPw, err := us.pwd.GeneretePassword(updateUser.Password)
 		if err != nil {
 			log.Print("update generete password error", err.Error())
 			return errors.New("update generete password error")

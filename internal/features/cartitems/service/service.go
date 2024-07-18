@@ -2,7 +2,6 @@ package service
 
 import (
 	"ecommerce/internal/features/cartitems"
-	"ecommerce/internal/utils"
 	"errors"
 	"log"
 
@@ -11,17 +10,12 @@ import (
 
 type CartItemServices struct {
 	qry cartitems.Query
-	pwd utils.HashingPwInterface
-	vld utils.ValidatorUtilityInterface
-	jwt utils.JwtUtilityInterface
+
 }
 
-func NewCartItemService(q cartitems.Query, p utils.HashingPwInterface, v utils.ValidatorUtilityInterface, j utils.JwtUtilityInterface) cartitems.Service {
+func NewCartItemService(q cartitems.Query, ) cartitems.Service {
 	return &CartItemServices{
 		qry: q,
-		pwd: p,
-		vld: v,
-		jwt: j,
 	}
 }
 
@@ -109,4 +103,19 @@ func (cs *CartItemServices) GetAllCartItems(userID uint) ([]cartitems.CartItem, 
 	}
 
 	return result, cproduct, nil
+}
+
+func (cs *CartItemServices) DeleteCartItemByUserID(UserID uint) error {
+
+	err := cs.qry.DeleteCartItemByUserID(UserID);
+	msg := "internal server error"
+
+	if err != nil {
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			msg = "not found"
+		}
+		return errors.New(msg)
+	}
+
+	return  nil
 }

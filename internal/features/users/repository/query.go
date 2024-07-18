@@ -55,28 +55,6 @@ func (um *UserModels) GetUser(ID uint)(users.User, error) {
 // update data user
 func (um *UserModels) UpdateUser(ID uint, updateUser users.User) error {
 	cnvQuery := ToUsersQuery(updateUser);
-
-
-	if updateUser.Fullname != "" {
-		cnvQuery.Fullname = updateUser.Fullname
-	}
-
-	if updateUser.Email != "" {
-		cnvQuery.Email = updateUser.Email
-	}
-
-	if updateUser.Password != "" {
-		cnvQuery.Password = updateUser.Password
-	}
-
-	if updateUser.Phone != ""{
-		cnvQuery.Phone = updateUser.Phone
-	}
-
-	if updateUser.Address != "" {
-		cnvQuery.Address = updateUser.Address
-	}
-
 	qry := um.db.Where("id = ?", ID).Updates(&cnvQuery);
 
 	if qry.Error != nil {

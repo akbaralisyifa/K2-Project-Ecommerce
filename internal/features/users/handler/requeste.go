@@ -14,6 +14,12 @@ type LoginRequest struct {
 }
 
 type GetUpdateRequest struct {
+	Fullname   string `json:"fullname" form:"fullname"`
+	Email      string `json:"email" form:"email"`
+	Password   string `json:"password" form:"password"`
+	Phone      string `json:"phone" form:"phone"`
+	Address    string `json:"address" form:"address"`
+	ImgProfile string
 	Fullname   string `json:"fullname" form:"fullname" `
 	Email      string `json:"email" form:"email" `
 	Password   string `json:"password" form:"password" `
