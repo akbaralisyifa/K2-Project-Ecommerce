@@ -98,6 +98,8 @@ func (om *OrderModels) GetOrderItems(OrderID uint) ([]orders.OrderItems, error){
 func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, cartItems []cartitems.CartItem ) error {
 	tx := om.db.Begin();
 
+
+
 	orderID, err := om.CreateOrders(newOrder);
 	if err != nil {
 		tx.Rollback()

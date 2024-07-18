@@ -12,6 +12,7 @@ type Order struct {
 	PaymentMethod   string       `json:"payment_method"`
 	ShippingAddress string       `json:"shipping_address"`
 	Status          string       `json:"status"`
+	TotalOrder		uint64		 `json:"total_order"`
 	OrderItems      []OrderItems `json:"order_items"`
 }
 

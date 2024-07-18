@@ -8,6 +8,7 @@ type OrdersResponse struct {
 	PaymentMethod 	string `json:"payment_method"`
 	ShippingAddress string `json:"shipping_address"`
 	Status       	string `json:"status"`
+	TotalOrder		uint64 `json:"total_order"`
 	OrderItems      []orders.OrderItems `json:"order_items"`
 };
 
@@ -21,6 +22,7 @@ func ToOrderResponse(result []orders.Order) []OrdersResponse{
 			PaymentMethod:   val.PaymentMethod,
 			ShippingAddress: val.ShippingAddress,
 			Status: 		 val.Status,
+			TotalOrder: 	 val.TotalOrder,	
 			OrderItems:		 val.OrderItems,
 		}
 	}

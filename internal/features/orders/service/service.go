@@ -39,6 +39,8 @@ func (os *OrderService) GetAllOrder(userID uint) ([]orders.Order, error) {
 };
 
 func (os *OrderService) GetAllOrderHistory(userID uint) ([]orders.Order, error) {
+
+	
 	result, err := os.qry.GetAllOrderHistory(userID);
 	if err != nil {
 		log.Println("get order history error:", err.Error())
