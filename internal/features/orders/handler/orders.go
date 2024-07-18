@@ -39,6 +39,21 @@ func (oc *OrderController) GetAllOrder() echo.HandlerFunc {
 	}
 }
 
+
+func (oc *OrderController) GetAllOrderHistory() echo.HandlerFunc{
+	return func (c echo.Context) error {
+		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+
+		result, err := oc.srv.GetAllOrderHistory(uint(userID));
+
+		if err != nil {
+			log.Print("Error", err.Error());
+			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server errror", nil))	
+		}
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "Orders retrieved", ToOrderResponse(result)))
+	}
+}
+
 func (oc *OrderController) Checkout() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
