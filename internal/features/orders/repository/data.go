@@ -13,6 +13,7 @@ type Orders struct {
 	PaymentMethod   string
 	ShippingAddress string
 	Status          string
+	TotalOrder		uint64
 	OrderItems      []OrderItems `gorm:"foreignKey:order_id"`
 }
 
@@ -30,6 +31,7 @@ func (or *Orders) ToOrderEntity() orders.Order {
 		PaymentMethod:   or.PaymentMethod,
 		ShippingAddress: or.ShippingAddress,
 		Status: 		 or.Status,	
+		TotalOrder: 	 or.TotalOrder,	
 		OrderItems: 	 nil,
 	}
 }
@@ -40,6 +42,7 @@ func ToOrderQuery(input orders.Order) Orders {
 		PaymentMethod:   input.PaymentMethod,
 		ShippingAddress: input.ShippingAddress,
 		Status:          input.Status,
+		TotalOrder:      input.TotalOrder,
 	}
 }
 
@@ -112,33 +115,17 @@ func (or *Orders) ToOrderListGetAll() orders.Order {
 				TotalPrice: val.TotalPrice,
 			}
 		}
+		allOrderItems.TotalOrder = countTotalPriceOrder(or.OrderItems)
 	}
 
 	return allOrderItems
 }
 
-// func (a *Articles) ToArticlesEntityComments() articles.Article {
-// 	articlesEntity := a.ToArticlesEntity()
 
-// 	if len(a.Comments) > 0 {
-// 		articlesEntity.Comments = make([]articles.Comment, len(a.Comments))
-// 		for i, val := range a.Comments {
-// 			articlesEntity.Comments[i] = articles.Comment{
-// 				UserID:  val.UserID,
-// 				Comment: val.Comment,
-// 			}
-// 		}
-// 	}
-
-// 	return articlesEntity
-// }
-
-// func ToArticlesEntityGetAll(articlesList []Articles) []articles.Article {
-// 	articlesEntity := make([]articles.Article, len(articlesList))
-
-// 	for i, val := range articlesList {
-// 		articlesEntity[i] = val.ToArticlesEntityComments()
-// 	}
-
-// 	return articlesEntity
-// }
+func countTotalPriceOrder(orderItems []OrderItems) uint64 {
+	var total uint64 = 0
+	for _, item := range orderItems {
+		total += uint64(item.TotalPrice)
+	}
+	return total
+}
