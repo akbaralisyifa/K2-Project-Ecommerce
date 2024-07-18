@@ -38,6 +38,7 @@ func ToOrderQuery(input orders.Order) Orders {
 		UserID: input.UserID,
 		PaymentMethod: input.PaymentMethod,
 		ShippingAddress: input.ShippingAddress,
+		Status: input.Status,
 	}
 }
 

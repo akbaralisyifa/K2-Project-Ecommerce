@@ -3,7 +3,6 @@ package service
 import (
 	"ecommerce/internal/features/cartitems"
 	"ecommerce/internal/features/orders"
-	"ecommerce/internal/features/products"
 	"errors"
 	"log"
 )
@@ -39,8 +38,9 @@ func (os *OrderService) GetAllOrder(userID uint) ([]orders.Order, error) {
 	return result, nil
 };
 
-func (os *OrderService) UpdateOrderStatus(OrderID uint, newStatus string) error {
-	err := os.qry.UpdateOrderStatus(OrderID, newStatus);
+// UpdateOrder(OrderID uint, updateOrder orders.Order) error
+func (os *OrderService) UpdateOrder(OrderID uint, updateOrders orders.Order) error {
+	err := os.qry.UpdateOrder(OrderID, updateOrders);
 	if err != nil {
 		log.Println("update orders sql error:", err.Error())
 		return errors.New("internal server error")
@@ -69,9 +69,10 @@ func (os *OrderService) GetOrderItems(OrderID uint) ([]orders.OrderItems, error)
 	return result, err;
 };
 
-func (os *OrderService) Checkout(UserID uint, newOrders orders.Order, ProductID uint, updateProduct products.Product) error {
+// Checkout(UserID uint, newOrder orders.Order, productID uint, cartItems []cartitems.CartItem ) error 
+func (os *OrderService) Checkout(UserID uint, newOrder orders.Order, cartItems []cartitems.CartItem) error {
 
-	err := os.qry.Checkout(UserID, newOrders, ProductID, updateProduct);
+	err := os.qry.Checkout(UserID, newOrder, cartItems);
 
 	if err != nil {
 		log.Println("Checkout orders error", err.Error())
