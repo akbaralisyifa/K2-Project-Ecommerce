@@ -11,13 +11,19 @@ type OrdersResponse struct {
 	OrderItems      []orders.OrderItems `json:"order_items"`
 };
 
-// func ToOrderResponse(result orders.Order) OrdersResponse{
-// 	return OrdersResponse{
-// 		ID: result.ID,
-// 		UserID: result.UserID,
-// 		PaymentMethod: result.PaymentMethod,
-// 		ShippingAddress: result.ShippingAddress,
-// 		Status: result.Status,
-// 		OrderItems: result.OrderItems,
-// 	}
-// }
+func ToOrderResponse(result []orders.Order) []OrdersResponse{
+	toResOrder := make([]OrdersResponse, len(result));
+
+	for i, val := range result{
+		toResOrder[i] = OrdersResponse{
+			ID: 			 val.ID,
+			UserID: 		 val.UserID,
+			PaymentMethod:   val.PaymentMethod,
+			ShippingAddress: val.ShippingAddress,
+			Status: 		 val.Status,
+			OrderItems:		 val.OrderItems,
+		}
+	}
+
+	return toResOrder;
+}

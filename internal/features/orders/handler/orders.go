@@ -35,7 +35,7 @@ func (oc *OrderController) GetAllOrder() echo.HandlerFunc{
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", nil))
 		}
 
-		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "Orders retrieved", result))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "Orders retrieved", ToOrderResponse(result)))
 	}
 };
 
