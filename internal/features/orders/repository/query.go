@@ -61,7 +61,7 @@ func (om *OrderModels) GetAllOrderHistory(userID uint) ([]orders.Order, error) {
 
 func (om *OrderModels) UpdateOrder(OrderID uint, updateOrder orders.Order) error {
 	cnvData := ToOrderQuery(updateOrder)
-	err := om.db.Model(&Orders{}).Where("order_id = ?", OrderID).Updates(&cnvData).Error
+	err := om.db.Model(&Orders{}).Where("id = ?", OrderID).Updates(&cnvData).Error
 
 	if err != nil {
 		return err
@@ -135,14 +135,28 @@ func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, cartItems []
 	return orderID, nil
 }
 
-func (om *OrderModels) GetOrder(UserID uint) (orders.Order, error) {
+func (om *OrderModels) GetOrder(orderID uint) (orders.Order, error) {
 	var result Orders
 
-	err := om.db.Debug().Model(&Orders{}).Where("user_id = ? ", UserID).Preload("OrderItems").Find(&result).Error
+	err := om.db.Where("id = ?", orderID).Find(&result).Error
 
 	if err != nil {
 		return orders.Order{}, err
 	}
 
 	return result.ToOrderEntity(), nil
+}
+
+func (om *OrderModels) GetTotalOrderPrice(orderID uint) (int, error) {
+	var result []OrderItems
+	var totalPrice int
+	err := om.db.Where("order_id = ?", orderID).Find(&result).Error
+
+	if err != nil {
+		return totalPrice, err
+	}
+	for _, v := range result {
+		totalPrice = totalPrice + v.TotalPrice
+	}
+	return totalPrice, nil
 }

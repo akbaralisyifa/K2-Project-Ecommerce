@@ -16,7 +16,7 @@ func Payment(orderID uint, totalAmount uint64) (string, error) {
 
 	req := snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  "payment-" + strconv.Itoa(int(orderID)),
+			OrderID:  strconv.Itoa(int(orderID)),
 			GrossAmt: int64(totalAmount),
 		},
 	}

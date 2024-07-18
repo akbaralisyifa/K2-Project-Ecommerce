@@ -14,6 +14,7 @@ type Order struct {
 	Status          string       `json:"status"`
 	TotalOrder      uint64       `json:"total_order"`
 	OrderItems      []OrderItems `json:"order_items"`
+	PaymentURL      string       `json:"payment_url"`
 }
 
 type OrderItems struct {
@@ -27,6 +28,7 @@ type Handler interface {
 	GetAllOrder() echo.HandlerFunc
 	GetAllOrderHistory() echo.HandlerFunc
 	Checkout() echo.HandlerFunc
+	UpdateOrder() echo.HandlerFunc
 }
 
 type Query interface {
@@ -37,7 +39,8 @@ type Query interface {
 	GetOrderItems(OrderID uint) ([]OrderItems, error)
 	Checkout(UserID uint, newOrder Order, cartItems []cartitems.CartItem) (uint, error)
 	GetAllOrderHistory(userID uint) ([]Order, error)
-	GetOrder(UserID uint) (Order, error)
+	GetOrder(OrderID uint) (Order, error)
+	GetTotalOrderPrice(orderID uint) (int, error)
 }
 
 type Service interface {

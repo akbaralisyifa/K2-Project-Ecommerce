@@ -89,7 +89,31 @@ func (os *OrderService) Checkout(UserID uint, newOrder orders.Order, cartItems [
 		log.Println("Checkout orders error", err.Error())
 		return "", errors.New("interal server error")
 	}
-	result, err := os.qry.GetOrder(orderID)
-	paymentURL, err := utils.Payment(orderID, result.TotalOrder)
+	totalPrice, err := os.qry.GetTotalOrderPrice(orderID)
+	if err != nil {
+		log.Println("Checkout payment error", err.Error())
+		return "", errors.New("interal server error")
+	}
+	log.Print("================", totalPrice, "================")
+
+	paymentURL, err := utils.Payment(orderID, uint64(totalPrice))
+	if err != nil {
+		log.Println("Checkout payment error", err.Error())
+		return "", errors.New("interal server error")
+	}
+
+	currentOrder, err := os.qry.GetOrder(orderID)
+	if err != nil {
+		log.Println("Get Order qry error", err.Error())
+		return "", errors.New("interal server error")
+	}
+	currentOrder.PaymentURL = paymentURL
+	currentOrder.TotalOrder = uint64(totalPrice)
+
+	err = os.qry.UpdateOrder(orderID, currentOrder)
+	if err != nil {
+		log.Println("Update Order qry error", err.Error())
+		return "", errors.New("interal server error")
+	}
 	return paymentURL, nil
 }
