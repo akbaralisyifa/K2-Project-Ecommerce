@@ -9,130 +9,154 @@ import (
 )
 
 type OrderModels struct {
-	db *gorm.DB
+	db  *gorm.DB
 	crt cartitems.Query
 	prd products.Query
-};
+}
 
 func NewOrderModels(connect *gorm.DB, c cartitems.Query, p products.Query) orders.Query {
 	return &OrderModels{
-		db: connect,
+		db:  connect,
 		crt: c,
 		prd: p,
 	}
-};
+}
 
 // create orders
 func (om *OrderModels) CreateOrders(newOrders orders.Order) (uint, error) {
 	cnvData := ToOrderQuery(newOrders)
-	err := om.db.Create(&cnvData).Error;
+	err := om.db.Create(&cnvData).Error
 
 	if err != nil {
 		return 0, err
-	};
+	}
 
-	return cnvData.ID, nil;
-};
+	return cnvData.ID, nil
+}
 
 func (om *OrderModels) GetAllOrder(UserID uint) ([]orders.Order, error) {
-	var result []Orders;
+	var result []Orders
 
 	err := om.db.Debug().Model(&Orders{}).Where("user_id = ? ", UserID).Preload("OrderItems").Find(&result).Error
 
 	if err != nil {
-		return []orders.Order{}, err;
+		return []orders.Order{}, err
 	}
 
-	return ToOrderEntityGetAll(result) , nil;
+	return ToOrderEntityGetAll(result), nil
 }
 
 func (om *OrderModels) GetAllOrderHistory(userID uint) ([]orders.Order, error) {
-	var result []Orders;
+	var result []Orders
 
 	err := om.db.Debug().Model(&Orders{}).Where("status = 'success' AND user_id = ?", userID).Preload("OrderItems").Find(&result).Error
 	// err := om.db.Raw(qry, userID).Scan(&result).Error
 
 	if err != nil {
-		return []orders.Order{}, err;
-	};
+		return []orders.Order{}, err
+	}
 
-	return ToOrderEntityGetAll(result), nil;
+	return ToOrderEntityGetAll(result), nil
 }
 
 func (om *OrderModels) UpdateOrder(OrderID uint, updateOrder orders.Order) error {
 	cnvData := ToOrderQuery(updateOrder)
-	err := om.db.Model(&Orders{}).Where("order_id = ?", OrderID).Updates(&cnvData).Error
+	err := om.db.Model(&Orders{}).Where("id = ?", OrderID).Updates(&cnvData).Error
 
 	if err != nil {
 		return err
-	};
+	}
 
 	return nil
-};
+}
 
 // Order Items
-func(om *OrderModels) CreateOrderItems(orderID uint, newOrderItems []cartitems.CartItem) error {
+func (om *OrderModels) CreateOrderItems(orderID uint, newOrderItems []cartitems.CartItem) error {
 	cnvData := ToOrderItemsQuery(orderID, newOrderItems)
 	err := om.db.Create(&cnvData).Error
 
 	if err != nil {
 		return err
-	};
+	}
 
-	return nil;
-};
+	return nil
+}
 
-func (om *OrderModels) GetOrderItems(OrderID uint) ([]orders.OrderItems, error){
+func (om *OrderModels) GetOrderItems(OrderID uint) ([]orders.OrderItems, error) {
 	var result []OrderItems
 	err := om.db.Where("order_id = ?", OrderID).Find(&result).Error
 
 	if err != nil {
-		return []orders.OrderItems{}, err;
+		return []orders.OrderItems{}, err
 	}
 
-	return ToOrderItemsGetAll(result), nil;
-};
+	return ToOrderItemsGetAll(result), nil
+}
 
 // fungsi checkout
 // fungsi : - create order - create order item - delete carts - update product
-func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, cartItems []cartitems.CartItem ) error {
-	tx := om.db.Begin();
+func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, cartItems []cartitems.CartItem) (uint, error) {
+	tx := om.db.Begin()
 
-
-
-	orderID, err := om.CreateOrders(newOrder);
+	orderID, err := om.CreateOrders(newOrder)
 	if err != nil {
 		tx.Rollback()
-		return err
-	};
+		return 0, err
+	}
 
-	err = om.CreateOrderItems(orderID, cartItems);
+	err = om.CreateOrderItems(orderID, cartItems)
 	if err != nil {
 		tx.Rollback()
-		return err
-	};
-	
+		return 0, err
+	}
+
 	err = om.crt.DeleteCartItemByUserID(UserID)
 	if err != nil {
 		tx.Rollback()
-		return err
-	};
+		return 0, err
+	}
 
-	// updateProduct 
+	// updateProduct
 	for _, val := range cartItems {
-		product, err := om.prd.GetProduct(val.ProductID);
+		product, err := om.prd.GetProduct(val.ProductID)
 		if err != nil {
 			tx.Rollback()
-			return err;
+			return 0, err
 		}
 
 		product.Stock -= int(val.Qty)
-		err = om.prd.UpdateProduct(product.ID, product);
+		err = om.prd.UpdateProduct(product.ID, product)
 		if err != nil {
 			tx.Rollback()
-			return err;
+			return 0, err
 		}
 	}
 
-	return nil;
+	return orderID, nil
+}
+
+func (om *OrderModels) GetOrder(orderID uint) (orders.Order, error) {
+	var result Orders
+
+	err := om.db.Where("id = ?", orderID).Find(&result).Error
+
+	if err != nil {
+		return orders.Order{}, err
+	}
+
+	return result.ToOrderEntity(), nil
+}
+
+func (om *OrderModels) GetTotalOrderPrice(orderID uint) (int, error) {
+	var result []OrderItems
+	var totalPrice int
+	err := om.db.Where("order_id = ?", orderID).Find(&result).Error
+
+	if err != nil {
+		return totalPrice, err
+	}
+	for _, v := range result {
+		totalPrice = totalPrice + v.TotalPrice
+	}
+	return totalPrice, nil
 }

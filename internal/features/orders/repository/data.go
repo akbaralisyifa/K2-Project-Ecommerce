@@ -13,7 +13,8 @@ type Orders struct {
 	PaymentMethod   string
 	ShippingAddress string
 	Status          string
-	TotalOrder		uint64
+	TotalOrder      uint64
+	PaymentURL      string
 	OrderItems      []OrderItems `gorm:"foreignKey:order_id"`
 }
 
@@ -26,13 +27,14 @@ type OrderItems struct {
 
 func (or *Orders) ToOrderEntity() orders.Order {
 	return orders.Order{
-		ID:              or.UserID,
+		ID:              or.ID,
 		UserID:          or.UserID,
 		PaymentMethod:   or.PaymentMethod,
 		ShippingAddress: or.ShippingAddress,
-		Status: 		 or.Status,	
-		TotalOrder: 	 or.TotalOrder,	
-		OrderItems: 	 nil,
+		Status:          or.Status,
+		TotalOrder:      or.TotalOrder,
+		PaymentURL:      or.PaymentURL,
+		OrderItems:      nil,
 	}
 }
 
@@ -42,6 +44,7 @@ func ToOrderQuery(input orders.Order) Orders {
 		PaymentMethod:   input.PaymentMethod,
 		ShippingAddress: input.ShippingAddress,
 		Status:          input.Status,
+		PaymentURL:      input.PaymentURL,
 		TotalOrder:      input.TotalOrder,
 	}
 }
@@ -120,7 +123,6 @@ func (or *Orders) ToOrderListGetAll() orders.Order {
 
 	return allOrderItems
 }
-
 
 func countTotalPriceOrder(orderItems []OrderItems) uint64 {
 	var total uint64 = 0

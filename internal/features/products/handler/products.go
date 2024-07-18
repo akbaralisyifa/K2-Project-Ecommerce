@@ -154,3 +154,44 @@ func (uc *ProductController) GetAllProducts() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "All products retrieved", responseData))
 	}
 }
+
+func (uc *ProductController) GetAllProductsByOwner() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+		isPersonal, err := strconv.ParseBool(c.QueryParam("isPersonal"))
+		if err == nil {
+			if isPersonal {
+				responseData, err := uc.srv.GetAllUserProducts(uint(userID))
+				if err != nil {
+					errCode := 500
+					if strings.ContainsAny(err.Error(), "not found") {
+						errCode = 400
+					}
+					return c.JSON(errCode, helpers.ResponseFormat(errCode, err.Error(), nil))
+				}
+				return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "All products retrieved", responseData))
+			} else {
+				responseData, err := uc.srv.GetAllOtherUserProducts(uint(userID))
+				if err != nil {
+					errCode := 500
+					if strings.ContainsAny(err.Error(), "not found") {
+						errCode = 400
+					}
+					return c.JSON(errCode, helpers.ResponseFormat(errCode, err.Error(), nil))
+				}
+				return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "All products retrieved", responseData))
+			}
+		}
+
+		responseData, err := uc.srv.GetAllProducts()
+		if err != nil {
+			errCode := 500
+			if strings.ContainsAny(err.Error(), "not found") {
+				errCode = 400
+			}
+			return c.JSON(errCode, helpers.ResponseFormat(errCode, err.Error(), nil))
+		}
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "All products retrieved", responseData))
+	}
+}

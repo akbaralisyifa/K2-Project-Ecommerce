@@ -19,7 +19,7 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 	c.POST("/login", uh.Login())
 	c.GET("/products/:id", ph.GetProduct())
 	c.GET("/products", ph.GetAllProducts())
-
+	c.POST("/orders/update", oh.UpdateOrder())
 	//user route
 	ug := c.Group("/users")
 	ug.Use(echojwt.WithConfig(
@@ -42,10 +42,12 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 		},
 	))
 
+	pg.GET("/productbyowner", ph.GetAllProductsByOwner())
 	pg.POST("", ph.AddProduct())
 	pg.PUT("/:id", ph.UpdateProduct())
 	pg.DELETE("/:id", ph.DeleteProduct())
 
+	//cart item route
 	cg := c.Group("/cartitems")
 	cg.Use(echojwt.WithConfig(
 		echojwt.Config{
@@ -64,9 +66,8 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 			SigningKey:    []byte(secrateJwt),
 			SigningMethod: jwt.SigningMethodHS256.Name,
 		},
-	));
-	
-	// get semua 
+	))
+
 	c.GET("/orders", oh.GetAllOrder(), echojwt.WithConfig(
 		echojwt.Config{
 			SigningKey:    []byte(secrateJwt),
