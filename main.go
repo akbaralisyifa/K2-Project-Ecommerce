@@ -63,7 +63,8 @@ func InitCartItemRouter(db *gorm.DB) cartitems.Handler {
 func InitOrderRouter(db *gorm.DB) orders.Handler {
 	cm := crep.NewCartItemModels(db)
 	cs := cserv.NewCartItemService(cm)
-	om := oQry.NewOrderModels(db, cm)
+	pm := prep.NewProductModels(db);
+	om := oQry.NewOrderModels(db, cm, pm)
 	os := oSrv.NewOrderService(om)
 	oc := oHand.NewOrderController(os, cs)
 

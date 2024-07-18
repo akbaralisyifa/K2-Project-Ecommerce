@@ -3,6 +3,7 @@ package repository
 import (
 	"ecommerce/internal/features/cartitems"
 	"ecommerce/internal/features/orders"
+	"ecommerce/internal/features/products"
 
 	"gorm.io/gorm"
 )
@@ -10,12 +11,14 @@ import (
 type OrderModels struct {
 	db *gorm.DB
 	crt cartitems.Query
+	prd products.Query
 };
 
-func NewOrderModels(connect *gorm.DB, c cartitems.Query) orders.Query {
+func NewOrderModels(connect *gorm.DB, c cartitems.Query, p products.Query) orders.Query {
 	return &OrderModels{
 		db: connect,
 		crt: c,
+		prd: p,
 	}
 };
 
@@ -80,28 +83,41 @@ func (om *OrderModels) GetOrderItems(OrderID uint) ([]orders.OrderItems, error){
 // fungsi checkout
 // fungsi : - create order - create order item - delete carts - update product
 func (om *OrderModels) Checkout(UserID uint, newOrder orders.Order, cartItems []cartitems.CartItem ) error {
+	tx := om.db.Begin();
 
 	orderID, err := om.CreateOrders(newOrder);
 	if err != nil {
+		tx.Rollback()
 		return err
 	};
 
 	err = om.CreateOrderItems(orderID, cartItems);
 	if err != nil {
+		tx.Rollback()
 		return err
 	};
 	
 	err = om.crt.DeleteCartItemByUserID(UserID)
 	if err != nil {
+		tx.Rollback()
 		return err
 	};
 
-	// updateProduct products.Product
-	// err = om.prd.UpdateProduct(productID, updateProduct);
-	// if err != nil {
-	// 	return err
-	// };
+	// updateProduct 
+	for _, val := range cartItems {
+		product, err := om.prd.GetProduct(val.ProductID);
+		if err != nil {
+			tx.Rollback()
+			return err;
+		}
 
+		product.Stock -= int(val.Qty)
+		err = om.prd.UpdateProduct(product.ID, product);
+		if err != nil {
+			tx.Rollback()
+			return err;
+		}
+	}
 
 	return nil;
 }

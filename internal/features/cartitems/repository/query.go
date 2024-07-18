@@ -98,13 +98,14 @@ func (cm *CartItemModels) GetProduct(productID uint) (cartitems.Product, error) 
 // delete cart item by userid 
 func (cm *CartItemModels) DeleteCartItemByUserID(UserID uint) error {
 
-	qry := cm.db.Where("user_id = ?", UserID).Delete(&CartItems{})
+	qry := `DELETE FROM cart_items WHERE user_id = ?`
+	result := cm.db.Exec(qry, UserID)
 
-	if qry.Error != nil {
-		return qry.Error
+	if result.Error != nil {
+		return result.Error
 	}
 
-	if qry.RowsAffected < 1 {
+	if result.RowsAffected < 1 {
 		return gorm.ErrRecordNotFound
 	}
 
