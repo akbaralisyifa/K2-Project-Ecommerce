@@ -54,6 +54,6 @@ type Query interface {
 type Service interface {
 	AddCartItem(newCartItems CartItem, userID uint) error
 	DeleteCartItem(productID uint, userID uint) error
-	GetAllCartItems(userID uint) ([]CartItem, error)
+	GetAllCartItems(userID uint) ([]CartItem, []Product, error)
 	DeleteCartItemByUserID(UserID uint) error
 }

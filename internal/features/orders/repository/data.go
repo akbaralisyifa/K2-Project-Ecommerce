@@ -12,12 +12,12 @@ type Orders struct {
 	UserID          uint
 	PaymentMethod   string
 	ShippingAddress string
-	Status			string
-	OrderItems []OrderItems `gorm:"foreignKey:order_id"`
-};
+	Status          string
+	OrderItems      []OrderItems `gorm:"foreignKey:order_id"`
+}
 
 type OrderItems struct {
-	OrderID	   uint
+	OrderID    uint
 	ProductID  uint
 	Quantity   int
 	TotalPrice int
@@ -25,9 +25,9 @@ type OrderItems struct {
 
 func (or *Orders) ToOrderEntity() orders.Order {
 	return orders.Order{
-		ID: 			 or.UserID,
-		UserID: 		 or.UserID,
-		PaymentMethod: 	 or.PaymentMethod,
+		ID:              or.UserID,
+		UserID:          or.UserID,
+		PaymentMethod:   or.PaymentMethod,
 		ShippingAddress: or.ShippingAddress,
 		Status: 		 or.Status,	
 		OrderItems: 	 nil,
@@ -36,40 +36,40 @@ func (or *Orders) ToOrderEntity() orders.Order {
 
 func ToOrderQuery(input orders.Order) Orders {
 	return Orders{
-		UserID: input.UserID,
-		PaymentMethod: input.PaymentMethod,
+		UserID:          input.UserID,
+		PaymentMethod:   input.PaymentMethod,
 		ShippingAddress: input.ShippingAddress,
-		Status: input.Status,
+		Status:          input.Status,
 	}
 }
 
 func (oi *OrderItems) ToOrderItemEntity() orders.OrderItems {
 	return orders.OrderItems{
-		OrderID: 	oi.OrderID,
+		OrderID:    oi.OrderID,
 		ProductID:  oi.ProductID,
 		Quantity:   oi.Quantity,
 		TotalPrice: oi.TotalPrice,
 	}
 }
 
-func ToOrderItemQuery(input orders.OrderItems) OrderItems{
+func ToOrderItemQuery(input orders.OrderItems) OrderItems {
 	return OrderItems{
-		OrderID: input.OrderID,
-		ProductID: input.ProductID,
-		Quantity: input.Quantity,
+		OrderID:    input.OrderID,
+		ProductID:  input.ProductID,
+		Quantity:   input.Quantity,
 		TotalPrice: input.TotalPrice,
 	}
 }
 
-func ToOrderItemsQuery(orderID uint, inputOrders []cartitems.CartItem) []OrderItems{
-	ordItems := make([]OrderItems, len(inputOrders));
+func ToOrderItemsQuery(orderID uint, inputOrders []cartitems.CartItem) []OrderItems {
+	ordItems := make([]OrderItems, len(inputOrders))
 
-	for i, val := range inputOrders{
+	for i, val := range inputOrders {
 		ordItems[i] = OrderItems{
-			OrderID: orderID,
-			ProductID: val.ProductID,
-			Quantity: int(val.Qty),
-			TotalPrice:int(val.TotalPrice),
+			OrderID:    orderID,
+			ProductID:  val.ProductID,
+			Quantity:   int(val.Qty),
+			TotalPrice: int(val.TotalPrice),
 		}
 	}
 
@@ -77,39 +77,38 @@ func ToOrderItemsQuery(orderID uint, inputOrders []cartitems.CartItem) []OrderIt
 }
 
 // function get All Order Items
-func ToOrderItemsGetAll(orderItemList []OrderItems) []orders.OrderItems{
-	orderItemsEntity := make([]orders.OrderItems, len(orderItemList));
+func ToOrderItemsGetAll(orderItemList []OrderItems) []orders.OrderItems {
+	orderItemsEntity := make([]orders.OrderItems, len(orderItemList))
 
-	for i, val := range orderItemList{
+	for i, val := range orderItemList {
 		orderItemsEntity[i] = val.ToOrderItemEntity()
 	}
 
-	return orderItemsEntity;
+	return orderItemsEntity
 }
 
-
-// function get all order 
+// function get all order
 func ToOrderEntityGetAll(orderList []Orders) []orders.Order {
-	orderEntity := make([]orders.Order, len(orderList));
+	orderEntity := make([]orders.Order, len(orderList))
 
-	for i, val := range orderList{
+	for i, val := range orderList {
 		orderEntity[i] = val.ToOrderListGetAll()
 	}
 
-	return orderEntity;
-};
+	return orderEntity
+}
 
 // function get all order list
 func (or *Orders) ToOrderListGetAll() orders.Order {
-	allOrderItems := or.ToOrderEntity();
+	allOrderItems := or.ToOrderEntity()
 
 	if len(or.OrderItems) > 0 {
 		allOrderItems.OrderItems = make([]orders.OrderItems, len(or.OrderItems))
 		for i, val := range or.OrderItems {
 			allOrderItems.OrderItems[i] = orders.OrderItems{
-				OrderID: val.OrderID,
-				ProductID: val.ProductID,
-				Quantity: val.Quantity,
+				OrderID:    val.OrderID,
+				ProductID:  val.ProductID,
+				Quantity:   val.Quantity,
 				TotalPrice: val.TotalPrice,
 			}
 		}
@@ -133,7 +132,6 @@ func (or *Orders) ToOrderListGetAll() orders.Order {
 
 // 	return articlesEntity
 // }
-
 
 // func ToArticlesEntityGetAll(articlesList []Articles) []articles.Article {
 // 	articlesEntity := make([]articles.Article, len(articlesList))

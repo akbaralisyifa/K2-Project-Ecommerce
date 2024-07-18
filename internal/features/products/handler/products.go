@@ -73,7 +73,7 @@ func (uc *ProductController) GetProduct() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "Internal server error", nil))
 		}
 
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "Product successfully retrieved", ToGetProductResponse(result)))
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "Product successfully retrieved", result))
 	}
 }
 
