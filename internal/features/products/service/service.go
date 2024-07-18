@@ -104,3 +104,32 @@ func (ps *ProductServices) GetAllProducts() ([]products.Product, error) {
 
 	return result, nil
 }
+
+func (ps *ProductServices) GetAllUserProducts(userID uint) ([]products.Product, error) {
+
+	result, err := ps.qry.GetAllUserProducts(userID)
+	msg := "internal server error"
+	if err != nil {
+
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			msg = "not found"
+		}
+		return []products.Product{}, errors.New(msg)
+	}
+
+	return result, nil
+}
+func (ps *ProductServices) GetAllOtherUserProducts(userID uint) ([]products.Product, error) {
+
+	result, err := ps.qry.GetAllOtherUserProducts(userID)
+	msg := "internal server error"
+	if err != nil {
+
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			msg = "not found"
+		}
+		return []products.Product{}, errors.New(msg)
+	}
+
+	return result, nil
+}

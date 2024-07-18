@@ -43,7 +43,7 @@ func (pm *ProductModels) GetProduct(ID uint) (products.Product, error) {
 
 // update data product
 func (pm *ProductModels) UpdateProduct(ID uint, updateProduct products.Product) error {
-	cnvQuery := ToProductsQuery(updateProduct);
+	cnvQuery := ToProductsQuery(updateProduct)
 
 	qry := pm.db.Where("id = ?", ID).Updates(&cnvQuery)
 
@@ -76,6 +76,32 @@ func (pm *ProductModels) GetAllProducts() ([]products.Product, error) {
 	var result []Products
 	var resultConvert []products.Product
 	err := pm.db.Find(&result).Error
+	if err != nil {
+		return []products.Product{}, err
+	}
+	for _, v := range result {
+		resultConvert = append(resultConvert, v.ToProductsEntity())
+	}
+	return resultConvert, nil
+}
+
+func (pm *ProductModels) GetAllUserProducts(userID uint) ([]products.Product, error) {
+	var result []Products
+	var resultConvert []products.Product
+	err := pm.db.Where("user_id = ?", userID).Find(&result).Error
+	if err != nil {
+		return []products.Product{}, err
+	}
+	for _, v := range result {
+		resultConvert = append(resultConvert, v.ToProductsEntity())
+	}
+	return resultConvert, nil
+}
+
+func (pm *ProductModels) GetAllOtherUserProducts(userID uint) ([]products.Product, error) {
+	var result []Products
+	var resultConvert []products.Product
+	err := pm.db.Not("user_id = ?", userID).Find(&result).Error
 	if err != nil {
 		return []products.Product{}, err
 	}

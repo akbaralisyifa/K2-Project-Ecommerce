@@ -19,6 +19,7 @@ type Handler interface {
 	UpdateProduct() echo.HandlerFunc
 	DeleteProduct() echo.HandlerFunc
 	GetAllProducts() echo.HandlerFunc
+	GetAllProductsByOwner() echo.HandlerFunc
 }
 
 type Query interface {
@@ -27,6 +28,8 @@ type Query interface {
 	UpdateProduct(productID uint, updatedProduct Product) error
 	DeleteProduct(productID uint) error
 	GetAllProducts() ([]Product, error)
+	GetAllUserProducts(userID uint) ([]Product, error)
+	GetAllOtherUserProducts(userID uint) ([]Product, error)
 }
 
 type Service interface {
@@ -35,4 +38,6 @@ type Service interface {
 	UpdateProduct(productID uint, userID uint, updatedProduct Product) error
 	DeleteProduct(productID uint, userID uint) error
 	GetAllProducts() ([]Product, error)
+	GetAllUserProducts(userID uint) ([]Product, error)
+	GetAllOtherUserProducts(userID uint) ([]Product, error)
 }
