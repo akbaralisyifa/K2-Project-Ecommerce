@@ -3,14 +3,14 @@ package products
 import "github.com/labstack/echo/v4"
 
 type Product struct {
-	ID          uint
-	UserID      uint
-	Name        string
-	Category    string
-	Description string
-	Price       int
-	Stock       int
-	ImageUrl    string
+	ID          uint   `json:"id"`
+	UserID      uint   `json:"user_id"`
+	Name        string `json:"name"`
+	Category    string `json:"category"`
+	Description string `json:"description"`
+	Price       int    `json:"price"`
+	Stock       int    `json:"stock"`
+	ImageUrl    string `json:"image_url"`
 }
 
 type Handler interface {

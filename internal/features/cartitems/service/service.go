@@ -35,7 +35,7 @@ func (cs *CartItemServices) AddCartItem(newCartItem cartitems.CartItem, userID u
 		return errors.New("internal server error")
 	}
 
-	if result.Stock < int(newCartItem.Qty) {
+	if int(result.Stock) < int(newCartItem.Qty) {
 		log.Print("Stock not enough for request")
 		return errors.New("internal server error")
 	}
@@ -90,7 +90,7 @@ func (cs *CartItemServices) DeleteCartItem(productID uint, userID uint) error {
 	return nil
 }
 
-func (cs *CartItemServices) GetAllCartItems(userID uint) ([]cartitems.CartItem, error) {
+func (cs *CartItemServices) GetAllCartItems(userID uint) ([]cartitems.CartItem, []cartitems.Product, error) {
 
 	result, err := cs.qry.GetAllCartItems(userID)
 	msg := "internal server error"
@@ -99,8 +99,14 @@ func (cs *CartItemServices) GetAllCartItems(userID uint) ([]cartitems.CartItem, 
 		if err.Error() == gorm.ErrRecordNotFound.Error() {
 			msg = "not found"
 		}
-		return []cartitems.CartItem{}, errors.New(msg)
+		return []cartitems.CartItem{}, []cartitems.Product{}, errors.New(msg)
 	}
 
-	return result, nil
+	var cproduct []cartitems.Product
+	for _, v := range result {
+		producttemp, _ := cs.qry.GetProduct(v.ProductID)
+		cproduct = append(cproduct, producttemp)
+	}
+
+	return result, cproduct, nil
 }

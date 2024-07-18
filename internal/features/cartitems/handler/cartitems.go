@@ -40,7 +40,7 @@ func (cc *CartItemController) AddCartItem() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, "server error", nil))
 		}
 
-		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "Cart item scccessfully added", nil))
+		return c.JSON(http.StatusCreated, helpers.ResponseFormat(http.StatusCreated, "Cart scccessfully updated", nil))
 	}
 }
 
@@ -66,8 +66,9 @@ func (cc *CartItemController) DeleteCartItem() echo.HandlerFunc {
 
 func (cc *CartItemController) GetAllCartItems() echo.HandlerFunc {
 	return func(c echo.Context) error {
+
 		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
-		responseData, err := cc.srv.GetAllCartItems(uint(userID))
+		responseData1, responseData2, err := cc.srv.GetAllCartItems(uint(userID))
 		if err != nil {
 			errCode := 500
 			if strings.ContainsAny(err.Error(), "not found") {
@@ -75,6 +76,12 @@ func (cc *CartItemController) GetAllCartItems() echo.HandlerFunc {
 			}
 			return c.JSON(errCode, helpers.ResponseFormat(errCode, err.Error(), nil))
 		}
-		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "All Cart items retrieved", responseData))
+
+		var reponseData []AllCartItemResponse
+		for i, v := range responseData1 {
+			reponseData = append(reponseData, ToGetAllCartItemsResponse(responseData2[i], v))
+
+		}
+		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "All Cart items retrieved", reponseData))
 	}
 }
