@@ -46,10 +46,10 @@ func (om *OrderModels) GetAllOrder(UserID uint) ([]orders.Order, error) {
 	return ToOrderEntityGetAll(result), nil
 }
 
-func (om *OrderModels) GetAllOrderHistory(userID uint) ([]orders.Order, error) {
+func (om *OrderModels) GetAllOrderHistory(userID uint, orderID uint) ([]orders.Order, error) {
 	var result []Orders
 
-	err := om.db.Debug().Model(&Orders{}).Where("status = 'settlement' AND user_id = ?", userID).Preload("OrderItems").Find(&result).Error
+	err := om.db.Debug().Model(&Orders{}).Where("user_id = ? AND id = ?", userID, orderID).Preload("OrderItems").Find(&result).Error
 	// err := om.db.Raw(qry, userID).Scan(&result).Error
 
 	if err != nil {

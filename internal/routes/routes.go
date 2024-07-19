@@ -75,7 +75,7 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 		},
 	))
 
-	c.GET("/order-history", oh.GetAllOrderHistory(), echojwt.WithConfig(
+	c.GET("/detail-order", oh.GetAllOrderHistory(), echojwt.WithConfig(
 		echojwt.Config{
 			SigningKey:    []byte(secrateJwt),
 			SigningMethod: jwt.SigningMethodHS256.Name,

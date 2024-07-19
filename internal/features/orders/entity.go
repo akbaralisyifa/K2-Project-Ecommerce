@@ -38,7 +38,7 @@ type Query interface {
 	CreateOrderItems(orderID uint, newOrderItems []cartitems.CartItem) error
 	GetOrderItems(OrderID uint) ([]OrderItems, error)
 	Checkout(UserID uint, newOrder Order, cartItems []cartitems.CartItem) (uint, error)
-	GetAllOrderHistory(userID uint) ([]Order, error)
+	GetAllOrderHistory(userID uint, orderID uint) ([]Order, error)
 	GetOrder(OrderID uint) (Order, error)
 	GetTotalOrderPrice(orderID uint) (int, error)
 }
@@ -50,5 +50,5 @@ type Service interface {
 	CreateOrderItems(orderID uint, newOrderItem []cartitems.CartItem) error
 	GetOrderItems(OrderID uint) ([]OrderItems, error)
 	Checkout(UserID uint, newOrders Order, artItems []cartitems.CartItem) (string, error)
-	GetAllOrderHistory(userID uint) ([]Order, error)
+	GetAllOrderHistory(userID uint, orderID uint) ([]Order, error)
 }
