@@ -43,8 +43,9 @@ func (oc *OrderController) GetAllOrder() echo.HandlerFunc {
 func (oc *OrderController) GetAllOrderHistory() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		userID := utils.NewJwtUtility().DecodToken(c.Get("user").(*jwt.Token))
+		orderID, _ := strconv.Atoi(c.Param("id"))
 
-		result, err := oc.srv.GetAllOrderHistory(uint(userID))
+		result, err := oc.srv.GetAllOrderHistory(uint(userID), uint(orderID))
 
 		if err != nil {
 			log.Print("Error", err.Error())
