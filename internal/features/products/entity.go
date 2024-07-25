@@ -13,6 +13,10 @@ type Product struct {
 	ImageUrl    string `json:"image_url"`
 }
 
+type DownloadExcel struct{
+	Excel    string
+}
+
 type Handler interface {
 	AddProduct() echo.HandlerFunc
 	GetProduct() echo.HandlerFunc
@@ -20,6 +24,7 @@ type Handler interface {
 	DeleteProduct() echo.HandlerFunc
 	GetAllProducts() echo.HandlerFunc
 	GetAllProductsByOwner() echo.HandlerFunc
+	DownloadProductsExcel() echo.HandlerFunc
 }
 
 type Query interface {
@@ -40,4 +45,5 @@ type Service interface {
 	GetAllProducts() ([]Product, error)
 	GetAllUserProducts(userID uint) ([]Product, error)
 	GetAllOtherUserProducts(userID uint) ([]Product, error)
+	GenerateProductsExcel() ([]byte, error)
 }

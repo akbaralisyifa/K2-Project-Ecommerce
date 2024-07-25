@@ -12,6 +12,10 @@ type ProductResponse struct {
 	ImageUrl    string `json:"image_url"`
 }
 
+type DownloadExcel struct{
+	Excel    string `json:"blob_excel"`
+}
+
 func ToGetProductResponse(input products.Product) ProductResponse {
 	return ProductResponse{
 		ID:          input.ID,
@@ -21,5 +25,12 @@ func ToGetProductResponse(input products.Product) ProductResponse {
 		Price:       input.Price,
 		Stock:       input.Stock,
 		ImageUrl:    input.ImageUrl,
+	}
+}
+
+
+func ToDownloadExcel(input []byte) DownloadExcel {
+	return DownloadExcel{
+		Excel: string(input),
 	}
 }

@@ -45,8 +45,9 @@ func InitProductRouter(db *gorm.DB) products.Handler {
 	pw := utils.NewHashingPassword()
 	vl := utils.NewValidatorUtility(*validator.New())
 	jw := utils.NewJwtUtility()
+	xl := utils.NewExcelUtility()
 	pm := prep.NewProductModels(db)
-	ps := pserv.NewProductService(pm, pw, vl, jw)
+	ps := pserv.NewProductService(pm, pw, vl, jw, xl)
 	pc := phand.NewProductController(ps)
 
 	return pc
@@ -88,5 +89,5 @@ func main() {
 	or := InitOrderRouter(connect)
 	routes.InitRoute(e, ur, pr, cr, or)
 
-	e.Logger.Fatal(e.Start(":6000"))
+	e.Logger.Fatal(e.Start(":6121"))
 }

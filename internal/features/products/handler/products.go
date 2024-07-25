@@ -194,4 +194,24 @@ func (uc *ProductController) GetAllProductsByOwner() echo.HandlerFunc {
 		}
 		return c.JSON(http.StatusOK, helpers.ResponseFormat(http.StatusOK, "All products retrieved", responseData))
 	}
+};
+
+
+func (uc *ProductController) DownloadProductsExcel() echo.HandlerFunc{
+	return func(c echo.Context) error {
+		file, err := uc.srv.GenerateProductsExcel();
+
+		if err != nil {
+            return c.JSON(http.StatusInternalServerError, helpers.ResponseFormat(http.StatusInternalServerError, err.Error(), nil))
+        }
+
+		// ubah menjadi file 
+		c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename=products.xlsx")
+        c.Response().Header().Set(echo.HeaderContentType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        c.Response().Header().Set(echo.HeaderContentLength, strconv.Itoa(len(file)))
+
+
+		return c.Blob(http.StatusOK, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", file);
+
+	}
 }

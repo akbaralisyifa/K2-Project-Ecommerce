@@ -20,6 +20,8 @@ func InitRoute(c *echo.Echo, uh users.Handler, ph products.Handler, ch cartitems
 	c.GET("/products/:id", ph.GetProduct())
 	c.GET("/products", ph.GetAllProducts())
 	c.POST("/orders/update", oh.UpdateOrder())
+	c.GET("/download-product", ph.DownloadProductsExcel());
+	
 	//user route
 	ug := c.Group("/users")
 	ug.Use(echojwt.WithConfig(

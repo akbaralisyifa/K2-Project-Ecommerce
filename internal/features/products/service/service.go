@@ -4,6 +4,7 @@ import (
 	"ecommerce/internal/features/products"
 	"ecommerce/internal/utils"
 	"errors"
+	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -14,14 +15,16 @@ type ProductServices struct {
 	pwd utils.HashingPwInterface
 	vld utils.ValidatorUtilityInterface
 	jwt utils.JwtUtilityInterface
+	exl utils.ExcelUtilityInterface
 }
 
-func NewProductService(q products.Query, p utils.HashingPwInterface, v utils.ValidatorUtilityInterface, j utils.JwtUtilityInterface) products.Service {
+func NewProductService(q products.Query, p utils.HashingPwInterface, v utils.ValidatorUtilityInterface, j utils.JwtUtilityInterface, x utils.ExcelUtilityInterface) products.Service {
 	return &ProductServices{
 		qry: q,
 		pwd: p,
 		vld: v,
 		jwt: j,
+		exl: x,
 	}
 }
 
@@ -132,4 +135,22 @@ func (ps *ProductServices) GetAllOtherUserProducts(userID uint) ([]products.Prod
 	}
 
 	return result, nil
+};
+
+
+func (ps *ProductServices) GenerateProductsExcel() ([]byte, error){
+	products, err := ps.qry.GetAllProducts();
+
+	if err != nil {
+		return nil,  errors.New("failed to retrieve products")
+	};
+
+	excelFile, err := ps.exl.DownloadExcel(products)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil,  errors.New("failed to download product")
+	};
+
+	return excelFile, nil;
 }
