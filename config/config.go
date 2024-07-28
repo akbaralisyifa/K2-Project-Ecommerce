@@ -19,6 +19,7 @@ type setting struct {
 	JWTSecrat   string
 	CldKey      string
 	MidTransKey string
+	PwMail		string
 }
 
 func ImportSetting() setting {
@@ -38,6 +39,7 @@ func ImportSetting() setting {
 	result.JWTSecrat = os.Getenv("JWT_SECRATE")
 	result.CldKey = os.Getenv("CLOUDINARY_KEY")
 	result.MidTransKey = os.Getenv("MIDTRANS_KEY")
+	result.PwMail		= os.Getenv("PASSWORD_MAIL")
 	return result
 }
 

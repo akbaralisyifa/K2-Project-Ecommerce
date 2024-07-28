@@ -72,6 +72,11 @@ func InitOrderRouter(db *gorm.DB) orders.Handler {
 }
 
 func main() {
+	// send main
+	utils.SendGomail("./test.html")
+
+
+	// echo
 	e := echo.New()
 	setup := config.ImportSetting()
 	connect, _ := config.ConnectDB(&setup)
