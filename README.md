@@ -1,17 +1,31 @@
-#K2 Project E-commerce#
-Welcome to the K2 Project E-commerce, a fully functional e-commerce platform built with Golang. This project aims to provide a robust solution for online businesses, offering features that cater to both small and large scale operations.
+# K2 Proyek E-commerce
 
-Features
-User Authentication: Secure login and registration system.
-Product Management: Add, update, and remove products with ease.
-Shopping Cart: Users can add items to their cart and checkout.
-Order Management: Track and manage customer orders.
-Payment Integration: Support for multiple payment methods.
-Responsive Design: Ensures a great user experience across all devices.
-Technology Stack
-Backend: Golang
-Database: PostgreSQL
-Frontend: React.js (separate repository)
-API: RESTful API design
-Getting Started
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+Selamat datang di K2 Proyek E-commerce, platform e-commerce yang fungsional penuh, dibangun menggunakan Golang. Proyek ini bertujuan untuk menyediakan solusi yang kuat untuk bisnis online, menawarkan fitur yang dapat memenuhi operasi skala kecil hingga besar.
+
+## Fitur
+
+- **Autentikasi Pengguna**: Sistem login dan pendaftaran yang aman.
+- **Manajemen Produk**: Menambahkan, memperbarui, dan menghapus produk dengan mudah.
+- **Keranjang Belanja**: Pengguna dapat menambahkan barang ke keranjang dan melakukan checkout.
+- **Manajemen Pesanan**: Melacak dan mengelola pesanan pelanggan.
+- **Integrasi Pembayaran**: Dukungan untuk metode pembayaran beragam.
+- **Desain Responsif**: Memastikan pengalaman pengguna yang baik di semua perangkat.
+
+## Tumpukan Teknologi
+
+- **Backend**: Golang
+- **Database**: PostgreSQL
+- **Frontend**: React.js (repositori terpisah)
+- **API**: Desain API RESTful
+
+## Memulai
+
+Instruksi berikut akan membantu Anda mendapatkan salinan proyek yang berjalan di mesin lokal Anda untuk keperluan pengembangan dan pengujian.
+
+### Prasyarat
+
+Apa yang perlu Anda instal dan cara menginstalnya:
+
+```bash
+go version go1.15 linux/amd64
+PostgreSQL 12.0
